@@ -12,15 +12,23 @@
   --text: #E8E4D9;
   --silver: #a8b4c0;
   --olive: #8B9E6E;
+  --gold: #c9a84c;
+  --muted: #7a7a8a;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Georgia', serif;
   overflow-x: hidden;
+  animation: pageFadeIn 1.3s ease forwards;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 body::before {
@@ -416,15 +424,14 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   height: 260px;
 }
 
-.point-img img{
-  width:100%;height:100%;object-fit:cover;display:block;
-  transition:transform .6s ease;
-  transform:scale(1);
-}
-.point-img.zoomed img{
-  transform:scale(1.07);
+.point-img img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 1s ease;
+  transform: scale(1);
 }
 
+.point-img.zoomed img { transform: scale(1.18); }
 .point-img:hover img { transform: scale(1.05); }
 
 .point-line {
@@ -478,40 +485,6 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   line-height: 1.75;
 }
 
-@media (max-width: 600px) {
-  .route-point {
-    grid-template-columns: 20px 1fr;
-    grid-template-rows: auto auto;
-    gap: 0 14px;
-  }
-  .route-point .point-img,
-  .route-point:nth-child(even) .point-img {
-    grid-column: 2; grid-row: 2;
-    order: unset; height: 190px; margin-top: 14px;
-  }
-  .route-point .point-line,
-  .route-point:nth-child(even) .point-line {
-    grid-column: 1; grid-row: 1/3; order: unset;
-  }
-  .route-point .point-info,
-  .route-point:nth-child(even) .point-info {
-    grid-column: 2; grid-row: 1; order: unset; text-align: left;
-  }
-  .stat-item { padding: 18px 16px; 
-    .hero-title{font-size:clamp(1.6rem,10vw,2.8rem)}
-.gallery-wrap{height:72vw}
-.gallery-slide{flex:0 0 58vw;height:70vw;border-radius:14px}
-.departure-block{padding:20px 18px}
-.fashion-card{flex:0 0 220px;height:340px}
-.essentials-grid{grid-template-columns:1fr}
-.parallax-content h2{font-size:clamp(1.2rem,6vw,2rem)}
-.parallax-content p{font-size:.78rem;letter-spacing:.04em}
-.card-deck-wrap{height:700px}
-.deck-card{width:75vw;height:42vw;max-width:280px;max-height:160px}
-.card-deck-wrap{display:none}
-.flip-slider-mobile{display:block}}
-}
-
 /* SUNSCREEN */
 .sunscreen-section {
   padding: 100px 20px 60px;
@@ -547,85 +520,186 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   margin-bottom: 70px;
 }
 
-.sunscreen-section{text-align:center;padding:80px 24px 120px}
-.sunscreen-section .sub{text-align:center;color:var(--muted);font-size:.95rem;max-width:520px;margin:0 auto 14px;line-height:1.6}
-.price-note{text-align:center;color:var(--gold);font-size:.85rem;margin-bottom:60px;letter-spacing:.04em}
-.card-deck-wrap{position:relative;width:100%;height:480px;display:flex;align-items:center;justify-content:center;}
-.deck-card{position:absolute;width:260px;height:400px;cursor:default;perspective:1000px;}
-.deck-card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.4,0,.2,1);}
-.deck-card.flipped .deck-card-inner{transform:rotateY(180deg);}
-.deck-card-front,.deck-card-back{position:absolute;inset:0;border-radius:20px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
-.deck-card-front{background:#111;}
-.deck-card-front img{width:100%;height:100%;object-fit:cover;display:block;}
-.deck-card-back{background:#0d1117;transform:rotateY(180deg);}
-.deck-card-back img{width:100%;height:100%;object-fit:cover;display:block;}
-.deck-card-label{position:absolute;bottom:0;left:0;right:0;padding:40px 20px 20px;background:linear-gradient(transparent,rgba(0,0,0,.75));text-align:center;}
-.deck-card-label h3{font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;} 
-.deck-card-front::after{
-  content:'';
-  position:absolute;
-  top:0;left:-75%;
-  width:50%;height:100%;
-  background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.18) 50%,transparent 100%);
-  transform:skewX(-20deg);
-  opacity:0;
-  transition:none;
-  pointer-events:none;
+/* CARD DECK */
+.card-deck-wrap {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
-.deck-card.hovered .deck-card-front::after{
-  animation:cardShine .6s ease forwards;
+
+.deck-card {
+  position: absolute;
+  width: 260px;
+  height: 400px;
+  cursor: default;
+  perspective: 1000px;
 }
-@keyframes cardShine{
-  0%{left:-75%;opacity:1;}
-  100%{left:125%;opacity:1;}
+
+.deck-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .7s cubic-bezier(.4,0,.2,1);
 }
-.deck-card.hovered{
-  z-index:99!important;
-  transition:transform .4s cubic-bezier(.25,.46,.45,.94),box-shadow .4s;
-  transform:translateX(var(--cx,0px)) translateY(-40px) rotate(var(--cr,0deg)) scale(1.08)!important;
-  box-shadow:0 40px 80px rgba(0,0,0,.85),0 0 40px rgba(168,180,192,.15)!important;
+
+.deck-card.flipped .deck-card-inner { transform: rotateY(180deg); }
+
+.deck-card-front, .deck-card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
+
+.deck-card-front { background: #111; }
+.deck-card-front img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.deck-card-back { background: #0d1117; transform: rotateY(180deg); }
+.deck-card-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.deck-card-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 40px 20px 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,.75));
+  text-align: center;
+}
+
+.deck-card-label h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.deck-card-front::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -75%;
+  width: 50%; height: 100%;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.18) 50%, transparent 100%);
+  transform: skewX(-20deg);
+  opacity: 0;
+  transition: none;
+  pointer-events: none;
+}
+
+.deck-card.hovered .deck-card-front::after {
+  animation: cardShine .6s ease forwards;
+}
+
+@keyframes cardShine {
+  0%   { left: -75%; opacity: 1; }
+  100% { left: 125%; opacity: 1; }
+}
+
+.deck-card.hovered {
+  z-index: 99 !important;
+  transition: transform .4s cubic-bezier(.25,.46,.45,.94), box-shadow .4s;
+  transform: translateX(var(--cx, 0px)) translateY(-40px) rotate(var(--cr, 0deg)) scale(1.08) !important;
+  box-shadow: 0 40px 80px rgba(0,0,0,.85), 0 0 40px rgba(168,180,192,.15) !important;
+}
+
 /* MOBILE FLIP SLIDER */
-.flip-slider-mobile{display:none;width:100%;overflow:hidden;padding:20px 0}
-.flip-track-mobile{display:flex;align-items:center;gap:16px;will-change:transform;transition:transform .5s cubic-bezier(.4,0,.2,1)}
-.flip-card-m{
-  flex:0 0 72vw;height:90vw;max-width:280px;max-height:350px;
-  border-radius:20px;perspective:1000px;flex-shrink:0;
-  filter:brightness(.4) blur(1px);transform:scale(.88);opacity:.5;
-  transition:all .5s ease;
+.flip-slider-mobile {
+  display: none;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 20px 0 40px;
 }
-.flip-card-m.active{
-  filter:brightness(1) blur(0);transform:scale(1);opacity:1;
-  box-shadow:0 24px 60px rgba(0,0,0,.8);
+
+.flip-track-mobile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  will-change: transform;
+  overflow: visible;
 }
-.flip-card-m.semi{
-  filter:brightness(.65) blur(.5px);transform:scale(.93);opacity:.75;
+
+.flip-card-m {
+  flex: 0 0 70vw;
+  height: 88vw;
+  max-width: 272px;
+  max-height: 310px;
+  border-radius: 20px;
+  perspective: 1000px;
+  flex-shrink: 0;
+  filter: brightness(.4) blur(1px);
+  transform: scale(.88);
+  transition: filter .5s ease, transform .5s ease;
 }
-.flip-inner-m{
-  width:100%;height:100%;position:relative;
-  transform-style:preserve-3d;
-  transition:transform .7s cubic-bezier(.4,0,.2,1);
-  transform:rotateY(180deg);
+
+.flip-card-m.active {
+  filter: brightness(1) blur(0);
+  transform: scale(1);
+  box-shadow: 0 24px 60px rgba(0,0,0,.8);
 }
-.flip-card-m.active .flip-inner-m{transform:rotateY(0deg)}
-.flip-front-m,.flip-back-m{
-  position:absolute;inset:0;border-radius:20px;
-  overflow:hidden;backface-visibility:hidden;
-  -webkit-backface-visibility:hidden;
+
+.flip-card-m.semi {
+  filter: brightness(.65) blur(.5px);
+  transform: scale(.93);
 }
-.flip-front-m{background:#111}
-.flip-front-m img{width:100%;height:100%;object-fit:cover;display:block}
-.flip-back-m{background:#0d1117;transform:rotateY(180deg)}
-.flip-back-m img{width:100%;height:100%;object-fit:cover;display:block}
-.flip-label-m{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:40px 20px 20px;
-  background:linear-gradient(transparent,rgba(0,0,0,.75));
-  text-align:center;
+
+.flip-inner-m {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .8s cubic-bezier(.4,0,.2,1);
 }
-.flip-label-m h3{font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff}
-.flip-dots-m{display:none;gap:8px;justify-content:center;margin-top:20px}
-@media(max-width:600px){.flip-dots-m{display:flex}}
+
+.flip-card-m.active .flip-inner-m {
+  transform: rotateY(0deg);
+  transition: transform .8s cubic-bezier(.25,.46,.45,.94);
+}
+
+.flip-card-m:not(.active) .flip-inner-m {
+  transform: rotateY(180deg);
+}
+
+.flip-front-m, .flip-back-m {
+  position: absolute; inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-front-m { background: #111; }
+.flip-front-m img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.flip-back-m { background: #0d1117; transform: rotateY(180deg); }
+.flip-back-m img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.flip-label-m {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 40px 20px 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,.75));
+  text-align: center;
+}
+
+.flip-label-m h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.flip-dots-m {
+  display: none;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
 /* BUDGET */
 .budget-section {
   padding: 80px 20px;
@@ -770,9 +844,47 @@ footer {
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* MEDIA */
+@media (max-width: 600px) {
+  .gallery-slide.left,
+  .gallery-slide.right {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .gallery-slide.center {
+    width: 82vw;
+    height: 78vh;
+  }
+  .route-point {
+    grid-template-columns: 20px 1fr;
+    grid-template-rows: auto auto;
+    gap: 0 14px;
+  }
+  .route-point .point-img,
+  .route-point:nth-child(even) .point-img {
+    grid-column: 2; grid-row: 2;
+    order: unset; height: 190px; margin-top: 14px;
+  }
+  .route-point .point-line,
+  .route-point:nth-child(even) .point-line {
+    grid-column: 1; grid-row: 1/3; order: unset;
+  }
+  .route-point .point-info,
+  .route-point:nth-child(even) .point-info {
+    grid-column: 2; grid-row: 1; order: unset; text-align: left;
+  }
+  .stat-item { padding: 18px 16px; }
+  .parallax-content h2 { font-size: clamp(1.2rem, 6vw, 2rem); }
+  .parallax-content p { font-size: .65rem; letter-spacing: .08em; word-break: keep-all; }
+  .card-deck-wrap { display: none; }
+  .flip-slider-mobile { display: block; }
+  .flip-dots-m { display: flex; }
+}
 </style>
-</head>
-<body>
+</head><body style="opacity:0;">
+
+<div style="overflow-x:hidden;width:100%;">
 
 <canvas id="deerCanvas"></canvas>
 
@@ -783,7 +895,7 @@ footer {
   </div>
   <div class="gallery-track" id="galleryTrack">
     <div class="gallery-slide" data-index="0"><img src="mark.png" alt="Mark"></div>
-    <div class="gallery-slide" data-index="1"><img src="victor.png" alt="Victor"></div>
+    <div class="gallery-slide" data-index="1"><img src="victor.png" alt="Viktor"></div>
     <div class="gallery-slide" data-index="2"><img src="birka.png" alt="Birka"></div>
     <div class="gallery-slide" data-index="3"><img src="keanu.png" alt="Keanu"></div>
   </div>
@@ -916,11 +1028,14 @@ footer {
       </div>
     </div>
   </div>
+</section>
+
 <section class="sunscreen-section" id="sunscreenSection">
   <h2>Не обгори на маршруте</h2>
   <div class="section-divider"></div>
   <p class="sub">На открытом хребте солнце бьёт сверху и снизу — отражается от скал и снега. Пара недорогих аксессуаров решает это раз и навсегда.</p>
   <div class="price-note">💸 Всё стоит копейки — не экономь на коже</div>
+
   <div class="card-deck-wrap" id="cardDeckWrap">
     <div class="deck-card" id="deckCard0">
       <div class="deck-card-inner">
@@ -930,7 +1045,7 @@ footer {
     </div>
     <div class="deck-card" id="deckCard1">
       <div class="deck-card-inner">
-        <div class="deck-card-front"><img src="victor.png" alt="Victor"><div class="deck-card-label"><h3>Victor</h3></div></div>
+        <div class="deck-card-front"><img src="victor.png" alt="Viktor"><div class="deck-card-label"><h3>Viktor</h3></div></div>
         <div class="deck-card-back"><img src="card_back.png" alt="back"></div>
       </div>
     </div>
@@ -947,22 +1062,23 @@ footer {
       </div>
     </div>
   </div>
-<div class="flip-slider-mobile" id="flipSliderMobile">
-  <div class="flip-track-mobile" id="flipTrackMobile">
-    <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-    <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-    <div class="flip-card-m active" data-idx="1"><div class="flip-inner-m"><div class="flip-front-m"><img src="victor.png" alt="Victor"><div class="flip-label-m"><h3>Victor</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-    <div class="flip-card-m" data-idx="2"><div class="flip-inner-m"><div class="flip-front-m"><img src="birka.png" alt="Birka"><div class="flip-label-m"><h3>Birka</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-    <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-    <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+
+  <div class="flip-slider-mobile" id="flipSliderMobile" style="overflow:hidden;position:relative;">
+    <div class="flip-track-mobile" id="flipTrackMobile">
+      <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <div class="flip-card-m active" data-idx="1"><div class="flip-inner-m"><div class="flip-front-m"><img src="victor.png" alt="Viktor"><div class="flip-label-m"><h3>Viktor</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <div class="flip-card-m" data-idx="2"><div class="flip-inner-m"><div class="flip-front-m"><img src="birka.png" alt="Birka"><div class="flip-label-m"><h3>Birka</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+    </div>
+    <div class="flip-dots-m" id="flipDotsMobile">
+      <div class="gallery-dot" data-dot="0"></div>
+      <div class="gallery-dot active" data-dot="1"></div>
+      <div class="gallery-dot" data-dot="2"></div>
+      <div class="gallery-dot" data-dot="3"></div>
+    </div>
   </div>
-  <div class="flip-dots-m" id="flipDotsMobile">
-    <div class="gallery-dot" data-dot="0"></div>
-    <div class="gallery-dot active" data-dot="1"></div>
-    <div class="gallery-dot" data-dot="2"></div>
-    <div class="gallery-dot" data-dot="3"></div>
-  </div>
-</div>
 </section>
 
 <section class="budget-section reveal">
@@ -1037,8 +1153,20 @@ footer {
   <p style="margin-top:12px; opacity:0.4; font-size:0.72rem;">Встречаемся на хребте.</p>
 </footer>
 
+</div>
+
 <script>
+// ══════════════════════════════
+// FADE IN
+// ══════════════════════════════
+document.body.style.opacity = '';
+document.body.classList.remove('fade-in');
+void document.body.offsetWidth;
+document.body.classList.add('fade-in');
+
+// ══════════════════════════════
 // DEER
+// ══════════════════════════════
 const canvas = document.getElementById('deerCanvas');
 const ctx = canvas.getContext('2d');
 function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = 180; }
@@ -1068,7 +1196,7 @@ function drawDeer(cx, x, y, scale, flip) {
 const deers = Array.from({length:7},(_,i)=>({
   x: Math.random()*window.innerWidth,
   y: 80+Math.random()*70,
-  speed: 0.2+Math.random()*0.3,
+  speed: 0.9+Math.random()*0.6,
   scale: 0.5+Math.random()*0.5,
   flip: i%2===0,
   offset: Math.random()*100
@@ -1076,18 +1204,20 @@ const deers = Array.from({length:7},(_,i)=>({
 
 function animateDeers() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  const t = Date.now()*0.001;
+  const t = performance.now()/1000;
   deers.forEach(d=>{
     d.x += d.speed*(d.flip?-1:1);
     if(d.x>window.innerWidth+120) d.x=-120;
     if(d.x<-120) d.x=window.innerWidth+120;
-    drawDeer(ctx, d.x, d.y+Math.sin(t*2.8+d.offset)*2.5, d.scale, d.flip);
+    drawDeer(ctx, d.x, d.y+Math.sin(t*1.8+d.offset)*4, d.scale, d.flip);
   });
   requestAnimationFrame(animateDeers);
 }
 animateDeers();
 
+// ══════════════════════════════
 // HERO GALLERY
+// ══════════════════════════════
 const slides = document.querySelectorAll('.gallery-slide');
 const heroDots = document.querySelectorAll('#galleryNav .gallery-dot');
 let cur = 0;
@@ -1098,7 +1228,6 @@ function setGallery(index) {
   const prev = ((cur-1)+tot)%tot;
   const next = (cur+1)%tot;
   const prev2 = ((cur-2)+tot)%tot;
-  const next2 = (cur+2)%tot;
   slides.forEach((s,i)=>{
     s.className='gallery-slide';
     if(i===cur) s.classList.add('center');
@@ -1116,8 +1245,8 @@ document.getElementById('galleryPrev').addEventListener('click',()=>setGallery(c
 heroDots.forEach(d=>d.addEventListener('click',()=>setGallery(+d.dataset.index)));
 
 let heroTimer = setInterval(()=>setGallery(cur+1), 2000);
-let hTX = 0;
 const heroEl = document.querySelector('.hero');
+let hTX = 0;
 heroEl.addEventListener('touchstart',e=>{ hTX=e.touches[0].clientX; clearInterval(heroTimer); });
 heroEl.addEventListener('touchend',e=>{
   const diff = hTX-e.changedTouches[0].clientX;
@@ -1132,22 +1261,19 @@ heroEl.addEventListener('touchend',e=>{
   const section=document.getElementById('sunscreenSection');
   const cards=[0,1,2,3].map(i=>document.getElementById('deckCard'+i));
 
-  const isMobile=()=>window.innerWidth<=600;
-  const spread=[
-  {x:-390,rot:-12},{x:-130,rot:-4},{x:130,rot:4},{x:390,rot:12}
-];
-const spreadMobile=[
-  {x:0,y:-240,rot:-2},{x:0,y:-80,rot:1},{x:0,y:80,rot:-1},{x:0,y:240,rot:2}
-];
-  const stacked=[
-    {x:-6,rot:-4},{x:-2,rot:-1},{x:2,rot:2},{x:6,rot:5}
-  ];
-  const flipOrder=[0,2,1,3];
+  function getSpread(){
+    const w=window.innerWidth;
+    return [
+      {x:-w*0.22,rot:-12},{x:-w*0.075,rot:-4},
+      {x:w*0.075,rot:4},{x:w*0.22,rot:12}
+    ];
+  }
 
+  const stacked=[{x:-6,rot:-4},{x:-2,rot:-1},{x:2,rot:2},{x:6,rot:5}];
+  const flipOrder=[0,2,1,3];
   let state='stacked';
   let flipTimers=[];
   let collapseTimers=[];
-  // запоминаем исходную позицию каждой карты
   const basePos=stacked.map(p=>({...p}));
 
   function setCardPos(card,x,rot,transition=true){
@@ -1167,20 +1293,14 @@ const spreadMobile=[
   }
 
   function applySpread(animate){
-  const mobile=isMobile();
-  cards.forEach((c,i)=>{
-    c.style.zIndex=i;
-    c.style.boxShadow='0 20px 60px rgba(0,0,0,.7)';
-    if(mobile){
-      c.style.transition=animate?'transform .6s cubic-bezier(.4,0,.2,1)':'none';
-      c.style.transform=`translateX(${spreadMobile[i].x}px) translateY(${spreadMobile[i].y}px) rotate(${spreadMobile[i].rot}deg)`;
-      basePos[i]={x:spreadMobile[i].x,y:spreadMobile[i].y,rot:spreadMobile[i].rot};
-    } else {
-      setCardPos(c,spread[i].x,spread[i].rot,animate);
-      basePos[i]={x:spread[i].x,rot:spread[i].rot};
-    }
-  });
-}
+    const sp=getSpread();
+    cards.forEach((c,i)=>{
+      c.style.zIndex=i;
+      c.style.boxShadow='0 20px 60px rgba(0,0,0,.7)';
+      setCardPos(c,sp[i].x,sp[i].rot,animate);
+      basePos[i]={x:sp[i].x,rot:sp[i].rot};
+    });
+  }
 
   function flipCard(card,toFront){
     if(toFront)card.classList.remove('flipped');
@@ -1195,8 +1315,7 @@ const spreadMobile=[
 
   function enterSection(){
     if(state==='open')return;
-    clearTimers();
-    state='spread';
+    clearTimers();state='spread';
     applySpread(true);
     flipOrder.forEach((ci,i)=>{
       const t=setTimeout(()=>{
@@ -1209,38 +1328,28 @@ const spreadMobile=[
 
   function exitSection(){
     if(state==='stacked')return;
-    clearTimers();
-    state='closing';
+    clearTimers();state='closing';
     flipOrder.forEach((ci,i)=>{
       const t=setTimeout(()=>flipCard(cards[ci],false),i*300);
       collapseTimers.push(t);
     });
-    const t=setTimeout(()=>{
-      applyStacked(true);
-      state='stacked';
-    },flipOrder.length*300+400);
+    const t=setTimeout(()=>{applyStacked(true);state='stacked';},flipOrder.length*300+400);
     collapseTimers.push(t);
   }
 
   applyStacked(false);
   cards.forEach(c=>c.classList.add('flipped'));
 
-  // hover / touch
   cards.forEach((card,i)=>{
-    function hoverIn(){
-      if(state!=='open')return;
-      card.classList.add('hovered');
-    }
+    function hoverIn(){if(state!=='open')return;card.classList.add('hovered');}
     function hoverOut(){
       card.classList.remove('hovered');
-      // возврат на исходную позицию
       card.style.transition='transform .4s cubic-bezier(.25,.46,.45,.94),box-shadow .4s';
       card.style.transform=`translateX(${basePos[i].x}px) rotate(${basePos[i].rot}deg)`;
       card.style.zIndex=i;
     }
     card.addEventListener('mouseenter',hoverIn);
     card.addEventListener('mouseleave',hoverOut);
-    // touch
     card.addEventListener('touchstart',e=>{
       e.preventDefault();
       if(card.classList.contains('hovered'))hoverOut();
@@ -1249,16 +1358,17 @@ const spreadMobile=[
   });
 
   let lastRatio=0;
-const obs=new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    const ratio=e.intersectionRatio;
-    if(ratio>0.25&&lastRatio<=0.25)enterSection();
-    else if(ratio<0.1&&lastRatio>=0.1)exitSection();
-    lastRatio=ratio;
-  });
-},{threshold:[0,0.1,0.25,0.5,0.75,1]});
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      const ratio=e.intersectionRatio;
+      if(ratio>0.25&&lastRatio<=0.25)enterSection();
+      else if(ratio<0.1&&lastRatio>=0.1)exitSection();
+      lastRatio=ratio;
+    });
+  },{threshold:[0,0.1,0.25,0.5,0.75,1]});
   obs.observe(section);
 })();
+
 // ══════════════════════════════
 // MOBILE FLIP SLIDER
 // ══════════════════════════════
@@ -1267,27 +1377,35 @@ const obs=new IntersectionObserver((entries)=>{
   const track=document.getElementById('flipTrackMobile');
   if(!track)return;
   const cards=Array.from(track.querySelectorAll('.flip-card-m'));
-  const dots=Array.from(document.getElementById('flipDotsMobile').querySelectorAll('[data-dot]'));
+  const dotsEl=document.getElementById('flipDotsMobile');
+  const dots=dotsEl?Array.from(dotsEl.querySelectorAll('[data-dot]')):[];
   const REAL=4;
-  const CARD_W=Math.min(window.innerWidth*0.72,280)+16;
   let curIdx=2;
   let dragStartX=0,dragDelta=0;
 
+  function getCardW(){
+    return cards[0]?cards[0].offsetWidth+16:Math.min(window.innerWidth*0.70,272)+16;
+  }
+
   function getOffset(idx){
     const wrapW=track.parentElement.offsetWidth;
-    return Math.round((wrapW-Math.min(window.innerWidth*0.72,280))/2)-idx*CARD_W;
+    const cw=getCardW()-16;
+    return Math.round((wrapW/2)-(cw/2)-idx*getCardW());
   }
 
   function applyState(idx,anim=true){
     track.style.transition=anim?'transform .5s cubic-bezier(.4,0,.2,1)':'none';
     track.style.transform=`translateX(${getOffset(idx)}px)`;
-    cards.forEach((c,i)=>{
-      c.classList.remove('active','semi');
-      if(i===idx)c.classList.add('active');
-      else if(i===idx-1||i===idx+1)c.classList.add('semi');
-    });
-    const dotIdx=((idx-2)%REAL+REAL)%REAL;
-    dots.forEach((d,i)=>d.classList.toggle('active',i===dotIdx));
+    if(anim) cards.forEach(c=>c.classList.remove('active'));
+    setTimeout(()=>{
+      cards.forEach((c,i)=>{
+        c.classList.remove('active','semi');
+        if(i===idx){c.classList.add('active');}
+        else if(i===idx-1||i===idx+1){c.classList.add('semi');}
+      });
+      const dotIdx=((idx-2)%REAL+REAL)%REAL;
+      dots.forEach((d,i)=>d.classList.toggle('active',i===dotIdx));
+    },anim?280:0);
   }
 
   track.addEventListener('transitionend',()=>{
@@ -1295,19 +1413,22 @@ const obs=new IntersectionObserver((entries)=>{
     else if(curIdx<=1){curIdx=curIdx+REAL;applyState(curIdx,false);}
   });
 
-  applyState(curIdx,false);
+  requestAnimationFrame(()=>applyState(curIdx,false));
 
   track.addEventListener('touchstart',e=>{
-    dragStartX=e.touches[0].clientX;dragDelta=0;
+    dragStartX=e.touches[0].clientX;
+    dragDelta=0;
     track.style.transition='none';
   },{passive:true});
+
   track.addEventListener('touchmove',e=>{
     dragDelta=e.touches[0].clientX-dragStartX;
     track.style.transform=`translateX(${getOffset(curIdx)+dragDelta}px)`;
   },{passive:true});
+
   track.addEventListener('touchend',()=>{
-    if(dragDelta<-50){curIdx++;}
-    else if(dragDelta>50){curIdx--;}
+    if(dragDelta<-50)curIdx++;
+    else if(dragDelta>50)curIdx--;
     applyState(curIdx);
     dragDelta=0;
   });
@@ -1316,10 +1437,13 @@ const obs=new IntersectionObserver((entries)=>{
     curIdx=i+2;applyState(curIdx);
   }));
 })();
+
+// ══════════════════════════════
 // PARALLAX
-const pBg = document.getElementById('parallaxBg');
+// ══════════════════════════════
+const pBg=document.getElementById('parallaxBg');
 window.addEventListener('scroll',()=>{
-  if(pBg) pBg.style.transform=`translateY(${window.scrollY*0.18}px)`;
+  if(pBg)pBg.style.transform=`translateY(${window.scrollY*0.18}px)`;
 });
 
 // ══════════════════════════════
@@ -1340,5 +1464,7 @@ const imgObs=new IntersectionObserver((entries)=>{
 },{threshold:.5});
 pointImgs.forEach(img=>imgObs.observe(img));
 </script>
+
+</div>
 </body>
 </html>
