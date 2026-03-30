@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Поход Нишевых — Tanzawa Omote One Traverse</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0e0e12;
+  --text: #E8E4D9;
+  --silver: #a8b4c0;
+  --olive: #8B9E6E;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Georgia', serif;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(80,100,130,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(100,90,140,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse at 60% 80%, rgba(60,80,110,0.10) 0%, transparent 50%),
+    linear-gradient(135deg, #0a0a10 0%, #0e0e18 40%, #0c0c16 70%, #0a0a12 100%);
+  animation: bgShimmer 12s ease-in-out infinite alternate;
+}
+
+@keyframes bgShimmer {
+  0%   { filter: hue-rotate(0deg) brightness(1); }
+  33%  { filter: hue-rotate(8deg) brightness(1.04); }
+  66%  { filter: hue-rotate(-6deg) brightness(0.97); }
+  100% { filter: hue-rotate(4deg) brightness(1.02); }
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 0%, transparent 35%,
+    rgba(168,180,192,0.03) 45%,
+    rgba(168,180,192,0.06) 50%,
+    rgba(168,180,192,0.03) 55%,
+    transparent 65%, transparent 100%
+  );
+  background-size: 200% 200%;
+  animation: silverSlide 8s ease-in-out infinite;
+}
+
+@keyframes silverSlide {
+  0%   { background-position: 200% 0%; }
+  100% { background-position: -200% 0%; }
+}
+
+section, footer, .parallax-section { position: relative; z-index: 2; }
+
+#deerCanvas {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%; height: 180px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.13;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.hero-title {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  text-align: center;
+  pointer-events: none;
+  width: 90%;
+}
+
+.hero-title h1 {
+  font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+  letter-spacing: 0.15em;
+  color: var(--text);
+  text-transform: uppercase;
+  text-shadow: 0 2px 30px rgba(0,0,0,0.9);
+}
+
+.hero-title p {
+  font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+  color: var(--silver);
+  letter-spacing: 0.3em;
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+
+.gallery-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.gallery-slide {
+  position: absolute;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.85s cubic-bezier(0.25,0.46,0.45,0.94);
+  cursor: pointer;
+}
+
+.gallery-slide img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-slide.center {
+  width: min(55vw, 460px);
+  height: min(72vh, 620px);
+  z-index: 10;
+  filter: brightness(1);
+  transform: translateX(0) scale(1);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 40px rgba(168,180,192,0.08);
+}
+
+.gallery-slide.left {
+  width: min(35vw, 280px);
+  height: min(52vh, 450px);
+  z-index: 5;
+  filter: brightness(0.35) blur(2px);
+  transform: translateX(calc(-50% - min(20vw,170px))) scale(0.88);
+}
+
+.gallery-slide.right {
+  width: min(35vw, 280px);
+  height: min(52vh, 450px);
+  z-index: 5;
+  filter: brightness(0.35) blur(2px);
+  transform: translateX(calc(50% + min(20vw,170px))) scale(0.88);
+}
+
+.gallery-slide.hidden-left {
+  width: min(35vw, 280px);
+  height: min(52vh, 450px);
+  z-index: 1; opacity: 0;
+  filter: brightness(0.1) blur(4px);
+  transform: translateX(-250%);
+}
+
+.gallery-slide.hidden-right {
+  width: min(35vw, 280px);
+  height: min(52vh, 450px);
+  z-index: 1; opacity: 0;
+  filter: brightness(0.1) blur(4px);
+  transform: translateX(250%);
+}
+
+.gallery-nav {
+  position: absolute;
+  bottom: 36px;
+  left: 50%; transform: translateX(-50%);
+  display: flex; gap: 10px;
+  z-index: 20;
+}
+
+.gallery-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.gallery-dot.active {
+  background: var(--silver);
+  transform: scale(1.5);
+}
+
+.gallery-arrows {
+  position: absolute;
+  width: 100%; top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.gallery-arrow {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: rgba(168,180,192,0.12);
+  border: 1px solid rgba(168,180,192,0.25);
+  color: var(--silver);
+  font-size: 1.1rem;
+  cursor: pointer;
+  pointer-events: all;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+}
+
+.gallery-arrow:hover {
+  background: rgba(168,180,192,0.25);
+  transform: scale(1.1);
+}
+
+.section-divider {
+  width: 50px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--silver), transparent);
+  margin: 0 auto 40px;
+}
+
+/* PARALLAX */
+.parallax-section {
+  position: relative;
+  height: 420px;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.parallax-bg {
+  position: absolute;
+  inset: -30%;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+  filter: brightness(0.38) saturate(0.65);
+}
+
+.parallax-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(14,14,18,0.5) 0%,
+    rgba(14,14,18,0.25) 50%,
+    rgba(14,14,18,0.6) 100%
+  );
+}
+
+.parallax-content {
+  position: relative; z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.parallax-content h2 {
+  font-size: clamp(2rem, 6vw, 4rem);
+  color: var(--text);
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+}
+
+.parallax-content p {
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  color: var(--silver);
+  margin-top: 14px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* ROUTE */
+.route-section {
+  padding: 100px 20px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.route-section h2 {
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  color: var(--silver);
+  text-align: center;
+  letter-spacing: 0.12em;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+.departure-block {
+  background: rgba(168,180,192,0.04);
+  border: 1px solid rgba(168,180,192,0.12);
+  border-radius: 16px;
+  padding: 32px;
+  margin: 40px 0;
+}
+
+.dep-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.dep-row:last-child { border-bottom: none; }
+
+.dep-time {
+  font-size: 1.15rem;
+  color: var(--silver);
+  font-family: 'Courier New', monospace;
+  min-width: 66px;
+  flex-shrink: 0;
+}
+
+.dep-text {
+  font-size: 0.93rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.start-badge {
+  display: inline-block;
+  background: #c0392b;
+  color: #fff;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  padding: 3px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  margin-left: 10px;
+  vertical-align: middle;
+  animation: pulseBadge 2s infinite;
+}
+
+@keyframes pulseBadge {
+  0%,100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.5); }
+  50% { box-shadow: 0 0 0 8px rgba(192,57,43,0); }
+}
+
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  background: rgba(168,180,192,0.04);
+  border-top: 1px solid rgba(168,180,192,0.1);
+  border-bottom: 1px solid rgba(168,180,192,0.1);
+  margin: 50px 0;
+}
+
+.stat-item {
+  padding: 26px 34px;
+  text-align: center;
+  border-right: 1px solid rgba(168,180,192,0.1);
+}
+
+.stat-item:last-child { border-right: none; }
+
+.stat-val {
+  display: block;
+  font-size: 1.9rem;
+  color: var(--silver);
+  font-family: 'Courier New', monospace;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.66rem;
+  color: rgba(168,180,192,0.5);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.route-points { margin-top: 60px; }
+
+.route-point {
+  display: grid;
+  grid-template-columns: 1fr 24px 1fr;
+  gap: 0 30px;
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.route-point.visible { opacity: 1; transform: translateY(0); }
+
+.route-point:nth-child(even) .point-img { order: 3; }
+.route-point:nth-child(even) .point-line { order: 2; }
+.route-point:nth-child(even) .point-info { order: 1; text-align: right; }
+
+.point-img {
+  border-radius: 14px;
+  overflow: hidden;
+  height: 260px;
+}
+
+.point-img img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .6s ease;
+  transform:scale(1);
+}
+.point-img.zoomed img{
+  transform:scale(1.07);
+}
+
+.point-img:hover img { transform: scale(1.05); }
+
+.point-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.point-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--silver);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 3px rgba(168,180,192,0.2);
+  flex-shrink: 0;
+  margin-top: 18px;
+}
+
+.point-line-bar {
+  width: 1px; flex: 1;
+  background: linear-gradient(180deg, rgba(168,180,192,0.4) 0%, rgba(168,180,192,0.03) 100%);
+  margin-top: 6px;
+}
+
+.point-info { padding-top: 14px; }
+
+.point-time {
+  font-size: 0.75rem;
+  color: var(--silver);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.point-name {
+  font-size: 1.2rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.point-alt {
+  font-size: 0.75rem;
+  color: rgba(168,180,192,0.5);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.point-desc {
+  font-size: 0.87rem;
+  color: rgba(232,228,217,0.65);
+  line-height: 1.75;
+}
+
+@media (max-width: 600px) {
+  .route-point {
+    grid-template-columns: 20px 1fr;
+    grid-template-rows: auto auto;
+    gap: 0 14px;
+  }
+  .route-point .point-img,
+  .route-point:nth-child(even) .point-img {
+    grid-column: 2; grid-row: 2;
+    order: unset; height: 190px; margin-top: 14px;
+  }
+  .route-point .point-line,
+  .route-point:nth-child(even) .point-line {
+    grid-column: 1; grid-row: 1/3; order: unset;
+  }
+  .route-point .point-info,
+  .route-point:nth-child(even) .point-info {
+    grid-column: 2; grid-row: 1; order: unset; text-align: left;
+  }
+  .stat-item { padding: 18px 16px; 
+    .hero-title{font-size:clamp(1.6rem,10vw,2.8rem)}
+.gallery-wrap{height:72vw}
+.gallery-slide{flex:0 0 58vw;height:70vw;border-radius:14px}
+.departure-block{padding:20px 18px}
+.fashion-card{flex:0 0 220px;height:340px}
+.essentials-grid{grid-template-columns:1fr}
+.parallax-content h2{font-size:clamp(1.2rem,6vw,2rem)}
+.parallax-content p{font-size:.78rem;letter-spacing:.04em}}
+}
+
+/* SUNSCREEN */
+.sunscreen-section {
+  padding: 100px 20px 60px;
+  text-align: center;
+  position: relative; z-index: 2;
+}
+
+.sunscreen-section h2 {
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  color: var(--silver);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.sunscreen-section .sub {
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  color: rgba(168,180,192,0.55);
+  max-width: 500px;
+  margin: 0 auto 16px;
+  line-height: 1.7;
+}
+
+.price-note {
+  display: inline-block;
+  background: rgba(168,180,192,0.07);
+  border: 1px solid rgba(168,180,192,0.2);
+  color: var(--silver);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  padding: 7px 22px;
+  border-radius: 30px;
+  margin-bottom: 70px;
+}
+
+.sunscreen-section{text-align:center;padding:80px 24px 120px}
+.sunscreen-section .sub{text-align:center;color:var(--muted);font-size:.95rem;max-width:520px;margin:0 auto 14px;line-height:1.6}
+.price-note{text-align:center;color:var(--gold);font-size:.85rem;margin-bottom:60px;letter-spacing:.04em}
+.card-deck-wrap{position:relative;width:100%;height:480px;display:flex;align-items:center;justify-content:center;}
+.deck-card{position:absolute;width:260px;height:400px;cursor:default;perspective:1000px;}
+.deck-card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.4,0,.2,1);}
+.deck-card.flipped .deck-card-inner{transform:rotateY(180deg);}
+.deck-card-front,.deck-card-back{position:absolute;inset:0;border-radius:20px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.deck-card-front{background:#111;}
+.deck-card-front img{width:100%;height:100%;object-fit:cover;display:block;}
+.deck-card-back{background:#0d1117;transform:rotateY(180deg);}
+.deck-card-back img{width:100%;height:100%;object-fit:cover;display:block;}
+.deck-card-label{position:absolute;bottom:0;left:0;right:0;padding:40px 20px 20px;background:linear-gradient(transparent,rgba(0,0,0,.75));text-align:center;}
+.deck-card-label h3{font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;} 
+.deck-card-front::after{
+  content:'';
+  position:absolute;
+  top:0;left:-75%;
+  width:50%;height:100%;
+  background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.18) 50%,transparent 100%);
+  transform:skewX(-20deg);
+  opacity:0;
+  transition:none;
+  pointer-events:none;
+}
+.deck-card.hovered .deck-card-front::after{
+  animation:cardShine .6s ease forwards;
+}
+@keyframes cardShine{
+  0%{left:-75%;opacity:1;}
+  100%{left:125%;opacity:1;}
+}
+.deck-card.hovered{
+  z-index:99!important;
+  transition:transform .4s cubic-bezier(.25,.46,.45,.94),box-shadow .4s;
+  transform:translateX(var(--cx,0px)) translateY(-40px) rotate(var(--cr,0deg)) scale(1.08)!important;
+  box-shadow:0 40px 80px rgba(0,0,0,.85),0 0 40px rgba(168,180,192,.15)!important;
+}
+/* BUDGET */
+.budget-section {
+  padding: 80px 20px;
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative; z-index: 2;
+}
+
+.budget-section h2 {
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  color: var(--silver);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.budget-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.budget-table tr {
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.2s;
+}
+
+.budget-table tr:hover { background: rgba(168,180,192,0.04); }
+
+.budget-table td {
+  padding: 14px 10px;
+  font-size: 0.9rem;
+  color: var(--text);
+  text-align: left;
+}
+
+.budget-table td:last-child {
+  text-align: right;
+  color: var(--silver);
+  font-family: 'Courier New', monospace;
+}
+
+.budget-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(168,180,192,0.06);
+  border: 1px solid rgba(168,180,192,0.2);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.budget-total span:first-child { font-size: 0.95rem; color: var(--text); }
+.budget-total span:last-child {
+  font-size: 1.45rem;
+  color: var(--silver);
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+/* ESSENTIALS */
+.essentials-section {
+  padding: 80px 20px 100px;
+  max-width: 860px;
+  margin: 0 auto;
+  position: relative; z-index: 2;
+}
+
+.essentials-section h2 {
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  color: var(--silver);
+  text-align: center;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 50px;
+}
+
+.essentials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+}
+
+.essential-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(168,180,192,0.1);
+  border-radius: 16px;
+  padding: 26px 20px;
+  transition: all 0.3s ease;
+}
+
+.essential-card:hover {
+  border-color: rgba(168,180,192,0.25);
+  background: rgba(168,180,192,0.04);
+  transform: translateY(-4px);
+}
+
+.essential-icon { font-size: 1.8rem; margin-bottom: 14px; display: block; }
+
+.essential-card h3 {
+  font-size: 0.9rem;
+  color: var(--silver);
+  margin-bottom: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.essential-card ul { list-style: none; }
+
+.essential-card ul li {
+  font-size: 0.82rem;
+  color: rgba(232,228,217,0.62);
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  line-height: 1.55;
+}
+
+.essential-card ul li:last-child { border-bottom: none; }
+.banana-accent { color: #FFD700; }
+
+footer {
+  text-align: center;
+  padding: 60px 20px;
+  border-top: 1px solid rgba(168,180,192,0.08);
+  color: rgba(168,180,192,0.4);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  position: relative; z-index: 2;
+}
+
+.footer-title {
+  font-size: 1.15rem;
+  color: var(--silver);
+  margin-bottom: 10px;
+  letter-spacing: 0.15em;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<canvas id="deerCanvas"></canvas>
+
+<section class="hero">
+  <div class="hero-title">
+    <h1>Поход Нишевых</h1>
+    <p>Tanzawa · Omote One Traverse · <span style="white-space:nowrap">1 491 м</span></p>
+  </div>
+  <div class="gallery-track" id="galleryTrack">
+    <div class="gallery-slide" data-index="0"><img src="mark.png" alt="Mark"></div>
+    <div class="gallery-slide" data-index="1"><img src="victor.png" alt="Victor"></div>
+    <div class="gallery-slide" data-index="2"><img src="birka.png" alt="Birka"></div>
+    <div class="gallery-slide" data-index="3"><img src="keanu.png" alt="Keanu"></div>
+  </div>
+  <div class="gallery-arrows">
+    <button class="gallery-arrow" id="galleryPrev">&#8592;</button>
+    <button class="gallery-arrow" id="galleryNext">&#8594;</button>
+  </div>
+  <div class="gallery-nav" id="galleryNav">
+    <div class="gallery-dot active" data-index="0"></div>
+    <div class="gallery-dot" data-index="1"></div>
+    <div class="gallery-dot" data-index="2"></div>
+    <div class="gallery-dot" data-index="3"></div>
+  </div>
+</section>
+
+<div class="parallax-section">
+  <div class="parallax-bg" id="parallaxBg" style="background-image:url('hero_bg.png');"></div>
+  <div class="parallax-overlay"></div>
+  <div class="parallax-content">
+    <h2>15 км. 1 200 м вверх.</h2>
+    <p>Tanzawa · Kanagawa · Japan</p>
+  </div>
+</div>
+
+<section class="route-section">
+  <h2 class="reveal">Маршрут</h2>
+  <div class="section-divider reveal"></div>
+  <div class="departure-block reveal">
+    <div class="dep-row"><span class="dep-time">06:00</span><span class="dep-text">Подъём. Лёгкий завтрак — потом будет не до него.</span></div>
+    <div class="dep-row"><span class="dep-time">06:45</span><span class="dep-text">Поезд со <strong>Синдзюку</strong> — Odakyu Line экспресс до Хадано (~1 ч 15 мин, ¥820)</span></div>
+    <div class="dep-row"><span class="dep-time">08:00</span><span class="dep-text">Станция <strong>Хадано</strong>. Сразу к автобусной остановке — очередь собирается быстро.</span></div>
+    <div class="dep-row"><span class="dep-time">08:25</span><span class="dep-text">Автобус 秦21 → <strong>Яби-цу-тоге</strong> (~48 мин, ¥570)</span></div>
+    <div class="dep-row"><span class="dep-time">09:15</span><span class="dep-text"><strong>Яби-цу-тоге, 761 м</strong><span class="start-badge">Старт</span></span></div>
+  </div>
+  <div class="stats-bar reveal">
+    <div class="stat-item"><span class="stat-val">15</span><span class="stat-label">километров</span></div>
+    <div class="stat-item"><span class="stat-val">1 200</span><span class="stat-label">метров набора</span></div>
+    <div class="stat-item"><span class="stat-val">1 491</span><span class="stat-label">высшая точка</span></div>
+    <div class="stat-item"><span class="stat-val">7–8 ч</span><span class="stat-label">в движении</span></div>
+  </div>
+  <div class="route-points">
+    <div class="route-point">
+      <div class="point-img"><img src="yabitsu.png" alt="Яби-цу-тоге"></div>
+      <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
+      <div class="point-info">
+        <div class="point-time">09:15 — Старт</div>
+        <div class="point-name">Яби-цу-тоге</div>
+        <div class="point-alt">761 м</div>
+        <div class="point-desc">Перевал с туалетами и вендингом. Набери воды у источника Гомаяшики — один из 100 знаменитых в Японии. Через 20 минут тропа уходит в лес.</div>
+      </div>
+    </div>
+    <div class="route-point">
+      <div class="point-img"><img src="ninoto.png" alt="Ниното"></div>
+      <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
+      <div class="point-info">
+        <div class="point-time">10:20</div>
+        <div class="point-name">Ниното — 二ノ塔</div>
+        <div class="point-alt">1 144 м</div>
+        <div class="point-desc">Первый пик хребта. Фудзи появляется впервые — именно в этот момент понимаешь, зачем сюда ехал. Лавочки, можно снять лишний слой.</div>
+      </div>
+    </div>
+    <div class="route-point">
+      <div class="point-img"><img src="sannoto.png" alt="Санното"></div>
+      <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
+      <div class="point-info">
+        <div class="point-time">10:35</div>
+        <div class="point-name">Санното — 三ノ塔</div>
+        <div class="point-alt">1 205 м</div>
+        <div class="point-desc">Лучшая панорама на всём маршруте. Фудзи, залив Сагами, острова Идзу и в ясную погоду — Токийское Скайтри. Стой здесь столько, сколько хочешь.</div>
+      </div>
+    </div>
+    <div class="route-point">
+      <div class="point-img"><img src="karasuo.png" alt="Карасуо"></div>
+      <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
+      <div class="point-info">
+        <div class="point-time">11:05</div>
+        <div class="point-name">Карасуо — 烏尾山</div>
+        <div class="point-alt">1 136 м</div>
+        <div class="point-desc">Хижина с треугольной крышей — главный ориентир. Первый участок с цепями: держишься руками и спускаешься по скале. Звучит страшно, на деле — весело.</div>
+      </div>
+    </div>
+    <div class="route-point">
+      <div class="point-img"><img src="gyoja.png" alt="Гёдза"></div>
+      <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
+      <div class="point-info">
+        <div class="point-time">11:30</div>
+        <div class="point-name">Гёдза — 行者ヶ岳</div>
+        <div class="point-alt">1 180 м</div>
+        <div class="point-desc">Второй и последний технический участок — снова цепи и скальные ступени. Самое живое место на маршруте. После него тропа успокаивается.</div>
+      </div>
+    </div>
+    <div class="route-point">
+      <div class="point-img"><img src="shindainichi.png" alt="Шиндайнити"></div>
+      <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
+      <div class="point-info">
+        <div class="point-time">12:20</div>
+        <div class="point-name">Шиндайнити — 新大日</div>
+        <div class="point-alt">1 340 м</div>
+        <div class="point-desc">Развилка троп и последняя остановка перед вершиной. Буковый лес здесь осенью горит золотом. Вершина уже чувствуется близко.</div>
+      </div>
+    </div>
+    <div class="route-point">
+      <div class="point-img"><img src="tonodake.png" alt="Тонодаке"></div>
+      <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
+      <div class="point-info">
+        <div class="point-time">13:15 — Вершина 🏔</div>
+        <div class="point-name">Тонодаке — 塔ノ岳</div>
+        <div class="point-alt">1 491 м</div>
+        <div class="point-desc">Вот и всё. Открытая вершина, хижина Уносуми и Фудзи прямо перед тобой. Обед здесь обязательно. Отдыхаем 30–40 минут — потом вниз.</div>
+      </div>
+    </div>
+    <div class="route-point">
+      <div class="point-img"><img src="okura_ridge.png" alt="Спуск"></div>
+      <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
+      <div class="point-info">
+        <div class="point-time">14:00 — 15:30</div>
+        <div class="point-name">Спуск: Окура-оне</div>
+        <div class="point-alt">1 491 → 290 м</div>
+        <div class="point-desc">7 км деревянных ступеней вниз. Японцы зовут этот хребет «Бака-оне» — Хребет дурака. По пути несколько чайных домиков: кофе ¥300, виды на залив.</div>
+      </div>
+    </div>
+    <div class="route-point">
+      <div class="point-img"><img src="yamacafe.png" alt="Yama Cafe"></div>
+      <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
+      <div class="point-info">
+        <div class="point-time">15:30 — Финиш 🎌</div>
+        <div class="point-name">Yama Cafe</div>
+        <div class="point-alt">290 м · Окура</div>
+        <div class="point-desc">Финиш. Мороженое, кофе и ощущение, что прошёл что-то настоящее. Автобус до Сибусавы каждые 30 минут.</div>
+      </div>
+    </div>
+  </div>
+<section class="sunscreen-section" id="sunscreenSection">
+  <h2>Не обгори на маршруте</h2>
+  <div class="section-divider"></div>
+  <p class="sub">На открытом хребте солнце бьёт сверху и снизу — отражается от скал и снега. Пара недорогих аксессуаров решает это раз и навсегда.</p>
+  <div class="price-note">💸 Всё стоит копейки — не экономь на коже</div>
+  <div class="card-deck-wrap" id="cardDeckWrap">
+    <div class="deck-card" id="deckCard0">
+      <div class="deck-card-inner">
+        <div class="deck-card-front"><img src="mark.png" alt="Mark"><div class="deck-card-label"><h3>Mark</h3></div></div>
+        <div class="deck-card-back"><img src="card_back.png" alt="back"></div>
+      </div>
+    </div>
+    <div class="deck-card" id="deckCard1">
+      <div class="deck-card-inner">
+        <div class="deck-card-front"><img src="victor.png" alt="Victor"><div class="deck-card-label"><h3>Victor</h3></div></div>
+        <div class="deck-card-back"><img src="card_back.png" alt="back"></div>
+      </div>
+    </div>
+    <div class="deck-card" id="deckCard2">
+      <div class="deck-card-inner">
+        <div class="deck-card-front"><img src="birka.png" alt="Birka"><div class="deck-card-label"><h3>Birka</h3></div></div>
+        <div class="deck-card-back"><img src="card_back.png" alt="back"></div>
+      </div>
+    </div>
+    <div class="deck-card" id="deckCard3">
+      <div class="deck-card-inner">
+        <div class="deck-card-front"><img src="keanu.png" alt="Keanu"><div class="deck-card-label"><h3>Keanu</h3></div></div>
+        <div class="deck-card-back"><img src="card_back.png" alt="back"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="budget-section reveal">
+  <h2>Сколько это стоит</h2>
+  <div class="section-divider"></div>
+  <table class="budget-table">
+    <tr><td>🚃 Синдзюку → Хадано (Odakyu)</td><td>¥820</td></tr>
+    <tr><td>🚌 Хадано → Яби-цу-тоге (автобус)</td><td>¥570</td></tr>
+    <tr><td>🚌 Окура → Сибусава (автобус)</td><td>¥250</td></tr>
+    <tr><td>🚃 Сибусава → Синдзюку (Odakyu)</td><td>¥820</td></tr>
+    <tr><td>☕ Еда на маршруте + чайные домики</td><td>¥500–1 000</td></tr>
+    <tr><td>🍦 Yama Cafe на финише</td><td>¥500–800</td></tr>
+  </table>
+  <div class="budget-total">
+    <span>Итого на человека</span>
+    <span>~¥3 000–3 500</span>
+  </div>
+</section>
+
+<section class="essentials-section reveal">
+  <h2>Что взять с собой</h2>
+  <div class="section-divider"></div>
+  <div class="essentials-grid">
+    <div class="essential-card">
+      <span class="essential-icon">🍌</span>
+      <h3>Еда</h3>
+      <ul>
+        <li><span class="banana-accent">🍌🍌🍌</span> <strong>Бананы — must have.</strong> Быстрый углевод, не занимает место, не течёт. Берите больше чем думаете.</li>
+        <li>Снэки: орехи, сухофрукты, шоколад</li>
+        <li>Pocari Sweat — восстанавливает электролиты лучше воды</li>
+        <li>Протеиновые батончики — на долгий подъём</li>
+        <li>Минимум 1.5 л воды с собой</li>
+      </ul>
+    </div>
+    <div class="essential-card">
+      <span class="essential-icon">👟</span>
+      <h3>Одежда</h3>
+      <ul>
+        <li>Кроссовки с хорошим сцеплением — <strong>они убьются.</strong> Бери то, что не жалко</li>
+        <li>Многослойность: футболка + флис + куртка в рюкзаке</li>
+        <li>Треккинговые или спортивные штаны — не джинсы</li>
+        <li>Запасные носки — обязательно</li>
+        <li>Дождевик или лёгкая ветровка</li>
+      </ul>
+    </div>
+    <div class="essential-card">
+      <span class="essential-icon">🔋</span>
+      <h3>Техника</h3>
+      <ul>
+        <li>Павербанк — <strong>лучше свой.</strong> В группе будет несколько, но не зависи от других</li>
+        <li>Офлайн-карты Google Maps или Maps.me — скачай заранее</li>
+        <li>Телефон заряди до 100% перед выходом</li>
+        <li>Наличные ¥ — на хребте карты не берут</li>
+      </ul>
+    </div>
+    <div class="essential-card">
+      <span class="essential-icon">☀️</span>
+      <h3>Защита от солнца</h3>
+      <ul>
+        <li>SPF 50+ — на открытом хребте солнце без пощады</li>
+        <li>Шапка, кепка или бафф — выбери что ближе по стилю</li>
+        <li>Солнцезащитные очки</li>
+        <li>Лёгкий шарф или гейтер для шеи</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-title">Поход Нишевых</div>
+  <p>Tanzawa Omote One Traverse · Канагава · Япония</p>
+  <p style="margin-top:12px; opacity:0.4; font-size:0.72rem;">Встречаемся на хребте.</p>
+</footer>
+
+<script>
+// DEER
+const canvas = document.getElementById('deerCanvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = 180; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function drawDeer(cx, x, y, scale, flip) {
+  cx.save();
+  cx.translate(x, y);
+  if (flip) cx.scale(-1, 1);
+  cx.scale(scale, scale);
+  cx.fillStyle = '#2a3a4a';
+  cx.beginPath(); cx.ellipse(0,0,30,13,-0.05,0,Math.PI*2); cx.fill();
+  cx.beginPath(); cx.moveTo(16,-8); cx.lineTo(24,-26); cx.lineTo(29,-22); cx.lineTo(21,-5); cx.closePath(); cx.fill();
+  cx.beginPath(); cx.ellipse(27,-28,9,6,0.25,0,Math.PI*2); cx.fill();
+  cx.beginPath(); cx.ellipse(34,-26,4,3,0.1,0,Math.PI*2); cx.fill();
+  cx.beginPath(); cx.moveTo(22,-32); cx.lineTo(17,-41); cx.lineTo(25,-36); cx.closePath(); cx.fill();
+  cx.strokeStyle='#2a3a4a'; cx.lineWidth=2.5; cx.lineCap='round';
+  cx.beginPath(); cx.moveTo(23,-33); cx.lineTo(17,-47); cx.moveTo(17,-47); cx.lineTo(12,-43); cx.moveTo(17,-47); cx.lineTo(21,-51); cx.stroke();
+  [[-18,12],[-8,13],[5,13],[15,12]].forEach(([lx,ly])=>{
+    cx.beginPath(); cx.moveTo(lx,ly); cx.lineTo(lx-2,ly+22); cx.lineTo(lx+3,ly+22); cx.closePath(); cx.fill();
+  });
+  cx.beginPath(); cx.ellipse(-28,-3,5,4,0.4,0,Math.PI*2); cx.fillStyle='#3a4a5a'; cx.fill();
+  cx.restore();
+}
+
+const deers = Array.from({length:7},(_,i)=>({
+  x: Math.random()*window.innerWidth,
+  y: 80+Math.random()*70,
+  speed: 0.2+Math.random()*0.3,
+  scale: 0.5+Math.random()*0.5,
+  flip: i%2===0,
+  offset: Math.random()*100
+}));
+
+function animateDeers() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const t = Date.now()*0.001;
+  deers.forEach(d=>{
+    d.x += d.speed*(d.flip?-1:1);
+    if(d.x>window.innerWidth+120) d.x=-120;
+    if(d.x<-120) d.x=window.innerWidth+120;
+    drawDeer(ctx, d.x, d.y+Math.sin(t*2.8+d.offset)*2.5, d.scale, d.flip);
+  });
+  requestAnimationFrame(animateDeers);
+}
+animateDeers();
+
+// HERO GALLERY
+const slides = document.querySelectorAll('.gallery-slide');
+const heroDots = document.querySelectorAll('#galleryNav .gallery-dot');
+let cur = 0;
+const tot = slides.length;
+
+function setGallery(index) {
+  cur = ((index%tot)+tot)%tot;
+  const prev = ((cur-1)+tot)%tot;
+  const next = (cur+1)%tot;
+  const prev2 = ((cur-2)+tot)%tot;
+  const next2 = (cur+2)%tot;
+  slides.forEach((s,i)=>{
+    s.className='gallery-slide';
+    if(i===cur) s.classList.add('center');
+    else if(i===prev) s.classList.add('left');
+    else if(i===next) s.classList.add('right');
+    else if(i===prev2) s.classList.add('hidden-left');
+    else s.classList.add('hidden-right');
+  });
+  heroDots.forEach((d,i)=>d.classList.toggle('active',i===cur));
+}
+
+setGallery(0);
+document.getElementById('galleryNext').addEventListener('click',()=>setGallery(cur+1));
+document.getElementById('galleryPrev').addEventListener('click',()=>setGallery(cur-1));
+heroDots.forEach(d=>d.addEventListener('click',()=>setGallery(+d.dataset.index)));
+
+let heroTimer = setInterval(()=>setGallery(cur+1), 2000);
+let hTX = 0;
+const heroEl = document.querySelector('.hero');
+heroEl.addEventListener('touchstart',e=>{ hTX=e.touches[0].clientX; clearInterval(heroTimer); });
+heroEl.addEventListener('touchend',e=>{
+  const diff = hTX-e.changedTouches[0].clientX;
+  if(Math.abs(diff)>40) setGallery(diff>0?cur+1:cur-1);
+  heroTimer = setInterval(()=>setGallery(cur+1),2000);
+});
+
+// ══════════════════════════════
+// CARD DECK
+// ══════════════════════════════
+(function(){
+  const section=document.getElementById('sunscreenSection');
+  const cards=[0,1,2,3].map(i=>document.getElementById('deckCard'+i));
+
+  const spread=[
+    {x:-390,rot:-12},{x:-130,rot:-4},{x:130,rot:4},{x:390,rot:12}
+  ];
+  const stacked=[
+    {x:-6,rot:-4},{x:-2,rot:-1},{x:2,rot:2},{x:6,rot:5}
+  ];
+  const flipOrder=[0,2,1,3];
+
+  let state='stacked';
+  let flipTimers=[];
+  let collapseTimers=[];
+  // запоминаем исходную позицию каждой карты
+  const basePos=stacked.map(p=>({...p}));
+
+  function setCardPos(card,x,rot,transition=true){
+    card.style.transition=transition?'transform .6s cubic-bezier(.4,0,.2,1),box-shadow .6s':'none';
+    card.style.transform=`translateX(${x}px) rotate(${rot}deg)`;
+    card.style.setProperty('--cx',x+'px');
+    card.style.setProperty('--cr',rot+'deg');
+  }
+
+  function applyStacked(animate){
+    cards.forEach((c,i)=>{
+      c.style.zIndex=i;
+      c.style.boxShadow='none';
+      setCardPos(c,stacked[i].x,stacked[i].rot,animate);
+      basePos[i]={x:stacked[i].x,rot:stacked[i].rot};
+    });
+  }
+
+  function applySpread(animate){
+    cards.forEach((c,i)=>{
+      c.style.zIndex=i;
+      c.style.boxShadow='0 20px 60px rgba(0,0,0,.7)';
+      setCardPos(c,spread[i].x,spread[i].rot,animate);
+      basePos[i]={x:spread[i].x,rot:spread[i].rot};
+    });
+  }
+
+  function flipCard(card,toFront){
+    if(toFront)card.classList.remove('flipped');
+    else card.classList.add('flipped');
+  }
+
+  function clearTimers(){
+    flipTimers.forEach(clearTimeout);
+    collapseTimers.forEach(clearTimeout);
+    flipTimers=[];collapseTimers=[];
+  }
+
+  function enterSection(){
+    if(state==='open')return;
+    clearTimers();
+    state='spread';
+    applySpread(true);
+    flipOrder.forEach((ci,i)=>{
+      const t=setTimeout(()=>{
+        flipCard(cards[ci],true);
+        if(i===flipOrder.length-1)state='open';
+      },400+i*500);
+      flipTimers.push(t);
+    });
+  }
+
+  function exitSection(){
+    if(state==='stacked')return;
+    clearTimers();
+    state='closing';
+    flipOrder.forEach((ci,i)=>{
+      const t=setTimeout(()=>flipCard(cards[ci],false),i*300);
+      collapseTimers.push(t);
+    });
+    const t=setTimeout(()=>{
+      applyStacked(true);
+      state='stacked';
+    },flipOrder.length*300+400);
+    collapseTimers.push(t);
+  }
+
+  applyStacked(false);
+  cards.forEach(c=>c.classList.add('flipped'));
+
+  // hover / touch
+  cards.forEach((card,i)=>{
+    function hoverIn(){
+      if(state!=='open')return;
+      card.classList.add('hovered');
+    }
+    function hoverOut(){
+      card.classList.remove('hovered');
+      // возврат на исходную позицию
+      card.style.transition='transform .4s cubic-bezier(.25,.46,.45,.94),box-shadow .4s';
+      card.style.transform=`translateX(${basePos[i].x}px) rotate(${basePos[i].rot}deg)`;
+      card.style.zIndex=i;
+    }
+    card.addEventListener('mouseenter',hoverIn);
+    card.addEventListener('mouseleave',hoverOut);
+    // touch
+    card.addEventListener('touchstart',e=>{
+      e.preventDefault();
+      if(card.classList.contains('hovered'))hoverOut();
+      else hoverIn();
+    },{passive:false});
+  });
+
+  let lastRatio=0;
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    const ratio=e.intersectionRatio;
+    if(ratio>0.25&&lastRatio<=0.25)enterSection();
+    else if(ratio<0.1&&lastRatio>=0.1)exitSection();
+    lastRatio=ratio;
+  });
+},{threshold:[0,0.1,0.25,0.5,0.75,1]});
+  obs.observe(section);
+})();
+// PARALLAX
+const pBg = document.getElementById('parallaxBg');
+window.addEventListener('scroll',()=>{
+  if(pBg) pBg.style.transform=`translateY(${window.scrollY*0.18}px)`;
+});
+
+// ══════════════════════════════
+// SCROLL REVEAL + IMG ZOOM
+// ══════════════════════════════
+const revealEls=document.querySelectorAll('.reveal,.route-point');
+const revealObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:.12});
+revealEls.forEach(el=>revealObs.observe(el));
+
+const pointImgs=document.querySelectorAll('.point-img');
+const imgObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting)e.target.classList.add('zoomed');
+    else e.target.classList.remove('zoomed');
+  });
+},{threshold:.5});
+pointImgs.forEach(img=>imgObs.observe(img));
+</script>
+</body>
+</html>
