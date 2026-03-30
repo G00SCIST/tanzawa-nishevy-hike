@@ -891,7 +891,32 @@ footer {
 
 <canvas id="deerCanvas"></canvas>
 
-<section class="hero">
+<div class="flip-slider-mobile" id="flipSliderMobile" style="overflow:hidden;position:relative;">
+    <div class="flip-track-mobile" id="flipTrackMobile">
+      <!-- clone last-2: Viktor -->
+      <div class="flip-card-m" data-idx="2"><div class="flip-inner-m"><div class="flip-front-m"><img src="victor.png" alt="Viktor"><div class="flip-label-m"><h3>Viktor</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- clone last-1: Birka -->
+      <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="birka.png" alt="Birka"><div class="flip-label-m"><h3>Birka</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- REAL 0: Keanu -->
+      <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- REAL 1: Mark -->
+      <div class="flip-card-m" data-idx="1"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- REAL 2: Viktor -->
+      <div class="flip-card-m" data-idx="2"><div class="flip-inner-m"><div class="flip-front-m"><img src="victor.png" alt="Viktor"><div class="flip-label-m"><h3>Viktor</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- REAL 3: Birka -->
+      <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="birka.png" alt="Birka"><div class="flip-label-m"><h3>Birka</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- clone first+0: Keanu -->
+      <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- clone first+1: Mark -->
+      <div class="flip-card-m" data-idx="1"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+    </div>
+    <div class="flip-dots-m" id="flipDotsMobile">
+      <div class="gallery-dot" data-dot="0"></div>
+      <div class="gallery-dot active" data-dot="1"></div>
+      <div class="gallery-dot" data-dot="2"></div>
+      <div class="gallery-dot" data-dot="3"></div>
+    </div>
+  </div><section class="hero">
   <div class="hero-title">
     <h1>Поход Нишевых</h1>
     <p>Tanzawa · Omote One Traverse · <span style="white-space:nowrap">1 491 м</span></p>
@@ -1068,12 +1093,22 @@ footer {
 
   <div class="flip-slider-mobile" id="flipSliderMobile" style="overflow:hidden;position:relative;">
     <div class="flip-track-mobile" id="flipTrackMobile">
-      <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <div class="flip-card-m active" data-idx="1"><div class="flip-inner-m"><div class="flip-front-m"><img src="victor.png" alt="Viktor"><div class="flip-label-m"><h3>Viktor</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <div class="flip-card-m" data-idx="2"><div class="flip-inner-m"><div class="flip-front-m"><img src="birka.png" alt="Birka"><div class="flip-label-m"><h3>Birka</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- clone last-2: Viktor -->
+      <div class="flip-card-m" data-idx="2"><div class="flip-inner-m"><div class="flip-front-m"><img src="victor.png" alt="Viktor"><div class="flip-label-m"><h3>Viktor</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- clone last-1: Birka -->
+      <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="birka.png" alt="Birka"><div class="flip-label-m"><h3>Birka</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- REAL 0: Keanu -->
+      <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- REAL 1: Mark -->
+      <div class="flip-card-m" data-idx="1"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- REAL 2: Viktor -->
+      <div class="flip-card-m" data-idx="2"><div class="flip-inner-m"><div class="flip-front-m"><img src="victor.png" alt="Viktor"><div class="flip-label-m"><h3>Viktor</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- REAL 3: Birka -->
+      <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="birka.png" alt="Birka"><div class="flip-label-m"><h3>Birka</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- clone first+0: Keanu -->
+      <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+      <!-- clone first+1: Mark -->
+      <div class="flip-card-m" data-idx="1"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
     </div>
     <div class="flip-dots-m" id="flipDotsMobile">
       <div class="gallery-dot" data-dot="0"></div>
@@ -1383,10 +1418,10 @@ heroEl.addEventListener('touchend',e=>{
   const dotsEl=document.getElementById('flipDotsMobile');
   const dots=dotsEl?Array.from(dotsEl.querySelectorAll('[data-dot]')):[];
   const REAL=4;
-  let curIdx=2;
+  const CLONE=2;
+  let curIdx=CLONE+2; // стартуем на реальном Viktor (индекс 4)
   let dragStartX=0,dragDelta=0;
   let isAnimating=false;
-  let loopPending=false;
 
   function getCardW(){
     return cards[0]?cards[0].offsetWidth+16:Math.min(window.innerWidth*0.70,272)+16;
@@ -1398,45 +1433,34 @@ heroEl.addEventListener('touchend',e=>{
     return Math.round((wrapW/2)-(cw/2)-idx*getCardW());
   }
 
-  function updateClasses(idx){
+  function updateDots(idx){
+    const dotIdx=((idx-CLONE)%REAL+REAL)%REAL;
+    dots.forEach((d,i)=>d.classList.toggle('active',i===dotIdx));
+  }
+
+  function applyState(idx,anim=true){
+    track.style.transition=anim?'transform .45s cubic-bezier(.4,0,.2,1)':'none';
+    track.style.transform=`translateX(${getOffset(idx)}px)`;
     cards.forEach((c,i)=>{
       c.classList.remove('active','semi');
       if(i===idx)c.classList.add('active');
       else if(i===idx-1||i===idx+1)c.classList.add('semi');
     });
-    const dotIdx=((idx-2)%REAL+REAL)%REAL;
-    dots.forEach((d,i)=>d.classList.toggle('active',i===dotIdx));
-  }
-
-  function applyState(idx,anim=true){
-    track.style.transition=anim?'transform .5s cubic-bezier(.4,0,.2,1)':'none';
-    track.style.transform=`translateX(${getOffset(idx)}px)`;
-    if(!anim){
-      updateClasses(idx);
-      return;
+    updateDots(idx);
+    if(anim){
+      isAnimating=true;
+      setTimeout(()=>{ isAnimating=false; },450);
     }
-    isAnimating=true;
-    cards.forEach(c=>c.classList.remove('active','semi'));
-    setTimeout(()=>{
-      updateClasses(idx);
-      isAnimating=false;
-    },300);
   }
 
-  // слушаем только один раз — на самом треке, игнорируем повторные срабатывания
-  track.addEventListener('transitionend',(e)=>{
-    if(e.target!==track)return; // игнорируем события от дочерних элементов
-    if(loopPending)return;
-    if(curIdx>=cards.length-2){
-      loopPending=true;
+  track.addEventListener('transitionend',e=>{
+    if(e.target!==track)return;
+    if(curIdx>=cards.length-CLONE){
       curIdx=curIdx-REAL;
       applyState(curIdx,false);
-      loopPending=false;
-    } else if(curIdx<=1){
-      loopPending=true;
+    } else if(curIdx<CLONE){
       curIdx=curIdx+REAL;
       applyState(curIdx,false);
-      loopPending=false;
     }
   });
 
@@ -1465,16 +1489,10 @@ heroEl.addEventListener('touchend',e=>{
 
   dots.forEach((d,i)=>d.addEventListener('click',()=>{
     if(isAnimating)return;
-    curIdx=i+2;applyState(curIdx);
+    curIdx=i+CLONE;
+    applyState(curIdx);
   }));
 })();
-// ══════════════════════════════
-// PARALLAX
-// ══════════════════════════════
-const pBg=document.getElementById('parallaxBg');
-window.addEventListener('scroll',()=>{
-  if(pBg)pBg.style.transform=`translateY(${window.scrollY*0.18}px)`;
-});
 
 // ══════════════════════════════
 // SCROLL REVEAL + IMG ZOOM
