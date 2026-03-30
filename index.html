@@ -68,7 +68,7 @@ body::after {
   );
   background-size: 200% 200%;
   animation: silverSlide 8s ease-in-out infinite;
-  will-change: filter, background-position;
+  will-change: background-position;
 }
 
 @keyframes silverSlide {
@@ -659,7 +659,6 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
 
 .flip-card-m.active .flip-inner-m {
   transform: rotateY(0deg);
-  transition: transform .8s cubic-bezier(.25,.46,.45,.94);
 }
 
 .flip-card-m:not(.active) .flip-inner-m {
@@ -885,38 +884,14 @@ footer {
   .gallery-arrows { display: none; }
 }
 </style>
-</head><body style="opacity:0;">
+</head>
+<body style="opacity:0;">
 
 <div style="overflow-x:hidden;width:100%;">
 
 <canvas id="deerCanvas"></canvas>
 
-<div class="flip-slider-mobile" id="flipSliderMobile" style="overflow:hidden;position:relative;">
-    <div class="flip-track-mobile" id="flipTrackMobile">
-      <!-- clone last-2: Viktor -->
-      <div class="flip-card-m" data-idx="2"><div class="flip-inner-m"><div class="flip-front-m"><img src="victor.png" alt="Viktor"><div class="flip-label-m"><h3>Viktor</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <!-- clone last-1: Birka -->
-      <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="birka.png" alt="Birka"><div class="flip-label-m"><h3>Birka</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <!-- REAL 0: Keanu -->
-      <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <!-- REAL 1: Mark -->
-      <div class="flip-card-m" data-idx="1"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <!-- REAL 2: Viktor -->
-      <div class="flip-card-m" data-idx="2"><div class="flip-inner-m"><div class="flip-front-m"><img src="victor.png" alt="Viktor"><div class="flip-label-m"><h3>Viktor</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <!-- REAL 3: Birka -->
-      <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="birka.png" alt="Birka"><div class="flip-label-m"><h3>Birka</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <!-- clone first+0: Keanu -->
-      <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-      <!-- clone first+1: Mark -->
-      <div class="flip-card-m" data-idx="1"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
-    </div>
-    <div class="flip-dots-m" id="flipDotsMobile">
-      <div class="gallery-dot" data-dot="0"></div>
-      <div class="gallery-dot active" data-dot="1"></div>
-      <div class="gallery-dot" data-dot="2"></div>
-      <div class="gallery-dot" data-dot="3"></div>
-    </div>
-  </div><section class="hero">
+<section class="hero">
   <div class="hero-title">
     <h1>Поход Нишевых</h1>
     <p>Tanzawa · Omote One Traverse · <span style="white-space:nowrap">1 491 м</span></p>
@@ -1197,10 +1172,7 @@ footer {
 // ══════════════════════════════
 // FADE IN
 // ══════════════════════════════
-document.body.style.opacity = '';
-document.body.classList.remove('fade-in');
-void document.body.offsetWidth;
-document.body.classList.add('fade-in');
+document.body.style.opacity = '1';
 
 // ══════════════════════════════
 // DEER
@@ -1419,7 +1391,7 @@ heroEl.addEventListener('touchend',e=>{
   const dots=dotsEl?Array.from(dotsEl.querySelectorAll('[data-dot]')):[];
   const REAL=4;
   const CLONE=2;
-  let curIdx=CLONE+2; // стартуем на реальном Viktor (индекс 4)
+  let curIdx=CLONE+2;
   let dragStartX=0,dragDelta=0;
   let isAnimating=false;
 
@@ -1493,6 +1465,18 @@ heroEl.addEventListener('touchend',e=>{
     applyState(curIdx);
   }));
 })();
+
+// ══════════════════════════════
+// PARALLAX
+// ══════════════════════════════
+window.addEventListener('scroll',()=>{
+  const bg=document.getElementById('parallaxBg');
+  if(bg){
+    const rect=bg.closest('.parallax-section').getBoundingClientRect();
+    const offset=rect.top*0.3;
+    bg.style.transform=`translateY(${offset}px)`;
+  }
+});
 
 // ══════════════════════════════
 // SCROLL REVEAL + IMG ZOOM
