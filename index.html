@@ -1386,6 +1386,7 @@ heroEl.addEventListener('touchend',e=>{
   let curIdx=2;
   let dragStartX=0,dragDelta=0;
   let isAnimating=false;
+  let loopPending=false;
 
   function getCardW(){
     return cards[0]?cards[0].offsetWidth+16:Math.min(window.innerWidth*0.70,272)+16;
@@ -1397,36 +1398,46 @@ heroEl.addEventListener('touchend',e=>{
     return Math.round((wrapW/2)-(cw/2)-idx*getCardW());
   }
 
+  function updateClasses(idx){
+    cards.forEach((c,i)=>{
+      c.classList.remove('active','semi');
+      if(i===idx)c.classList.add('active');
+      else if(i===idx-1||i===idx+1)c.classList.add('semi');
+    });
+    const dotIdx=((idx-2)%REAL+REAL)%REAL;
+    dots.forEach((d,i)=>d.classList.toggle('active',i===dotIdx));
+  }
+
   function applyState(idx,anim=true){
     track.style.transition=anim?'transform .5s cubic-bezier(.4,0,.2,1)':'none';
     track.style.transform=`translateX(${getOffset(idx)}px)`;
     if(!anim){
-      cards.forEach((c,i)=>{
-        c.classList.remove('active','semi');
-        if(i===idx)c.classList.add('active');
-        else if(i===idx-1||i===idx+1)c.classList.add('semi');
-      });
-      const dotIdx=((idx-2)%REAL+REAL)%REAL;
-      dots.forEach((d,i)=>d.classList.toggle('active',i===dotIdx));
+      updateClasses(idx);
       return;
     }
     isAnimating=true;
     cards.forEach(c=>c.classList.remove('active','semi'));
     setTimeout(()=>{
-      cards.forEach((c,i)=>{
-        c.classList.remove('active','semi');
-        if(i===idx)c.classList.add('active');
-        else if(i===idx-1||i===idx+1)c.classList.add('semi');
-      });
-      const dotIdx=((idx-2)%REAL+REAL)%REAL;
-      dots.forEach((d,i)=>d.classList.toggle('active',i===dotIdx));
+      updateClasses(idx);
       isAnimating=false;
     },300);
   }
 
-  track.addEventListener('transitionend',()=>{
-    if(curIdx>=cards.length-2){curIdx=curIdx-REAL;applyState(curIdx,false);}
-    else if(curIdx<=1){curIdx=curIdx+REAL;applyState(curIdx,false);}
+  // слушаем только один раз — на самом треке, игнорируем повторные срабатывания
+  track.addEventListener('transitionend',(e)=>{
+    if(e.target!==track)return; // игнорируем события от дочерних элементов
+    if(loopPending)return;
+    if(curIdx>=cards.length-2){
+      loopPending=true;
+      curIdx=curIdx-REAL;
+      applyState(curIdx,false);
+      loopPending=false;
+    } else if(curIdx<=1){
+      loopPending=true;
+      curIdx=curIdx+REAL;
+      applyState(curIdx,false);
+      loopPending=false;
+    }
   });
 
   requestAnimationFrame(()=>applyState(curIdx,false));
@@ -1457,7 +1468,6 @@ heroEl.addEventListener('touchend',e=>{
     curIdx=i+2;applyState(curIdx);
   }));
 })();
-
 // ══════════════════════════════
 // PARALLAX
 // ══════════════════════════════
