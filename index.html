@@ -507,7 +507,9 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
 .parallax-content h2{font-size:clamp(1.2rem,6vw,2rem)}
 .parallax-content p{font-size:.78rem;letter-spacing:.04em}
 .card-deck-wrap{height:700px}
-.deck-card{width:75vw;height:42vw;max-width:280px;max-height:160px}}
+.deck-card{width:75vw;height:42vw;max-width:280px;max-height:160px}
+.card-deck-wrap{display:none}
+.flip-slider-mobile{display:block}}
 }
 
 /* SUNSCREEN */
@@ -583,6 +585,47 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   transform:translateX(var(--cx,0px)) translateY(-40px) rotate(var(--cr,0deg)) scale(1.08)!important;
   box-shadow:0 40px 80px rgba(0,0,0,.85),0 0 40px rgba(168,180,192,.15)!important;
 }
+/* MOBILE FLIP SLIDER */
+.flip-slider-mobile{display:none;width:100%;overflow:hidden;padding:20px 0}
+.flip-track-mobile{display:flex;align-items:center;gap:16px;will-change:transform;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.flip-card-m{
+  flex:0 0 72vw;height:90vw;max-width:280px;max-height:350px;
+  border-radius:20px;perspective:1000px;flex-shrink:0;
+  filter:brightness(.4) blur(1px);transform:scale(.88);opacity:.5;
+  transition:all .5s ease;
+}
+.flip-card-m.active{
+  filter:brightness(1) blur(0);transform:scale(1);opacity:1;
+  box-shadow:0 24px 60px rgba(0,0,0,.8);
+}
+.flip-card-m.semi{
+  filter:brightness(.65) blur(.5px);transform:scale(.93);opacity:.75;
+}
+.flip-inner-m{
+  width:100%;height:100%;position:relative;
+  transform-style:preserve-3d;
+  transition:transform .7s cubic-bezier(.4,0,.2,1);
+  transform:rotateY(180deg);
+}
+.flip-card-m.active .flip-inner-m{transform:rotateY(0deg)}
+.flip-front-m,.flip-back-m{
+  position:absolute;inset:0;border-radius:20px;
+  overflow:hidden;backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.flip-front-m{background:#111}
+.flip-front-m img{width:100%;height:100%;object-fit:cover;display:block}
+.flip-back-m{background:#0d1117;transform:rotateY(180deg)}
+.flip-back-m img{width:100%;height:100%;object-fit:cover;display:block}
+.flip-label-m{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:40px 20px 20px;
+  background:linear-gradient(transparent,rgba(0,0,0,.75));
+  text-align:center;
+}
+.flip-label-m h3{font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff}
+.flip-dots-m{display:none;gap:8px;justify-content:center;margin-top:20px}
+@media(max-width:600px){.flip-dots-m{display:flex}}
 /* BUDGET */
 .budget-section {
   padding: 80px 20px;
@@ -904,6 +947,22 @@ footer {
       </div>
     </div>
   </div>
+<div class="flip-slider-mobile" id="flipSliderMobile">
+  <div class="flip-track-mobile" id="flipTrackMobile">
+    <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+    <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+    <div class="flip-card-m active" data-idx="1"><div class="flip-inner-m"><div class="flip-front-m"><img src="victor.png" alt="Victor"><div class="flip-label-m"><h3>Victor</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+    <div class="flip-card-m" data-idx="2"><div class="flip-inner-m"><div class="flip-front-m"><img src="birka.png" alt="Birka"><div class="flip-label-m"><h3>Birka</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+    <div class="flip-card-m" data-idx="3"><div class="flip-inner-m"><div class="flip-front-m"><img src="keanu.png" alt="Keanu"><div class="flip-label-m"><h3>Keanu</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+    <div class="flip-card-m" data-idx="0"><div class="flip-inner-m"><div class="flip-front-m"><img src="mark.png" alt="Mark"><div class="flip-label-m"><h3>Mark</h3></div></div><div class="flip-back-m"><img src="card_back.png" alt="back"></div></div></div>
+  </div>
+  <div class="flip-dots-m" id="flipDotsMobile">
+    <div class="gallery-dot" data-dot="0"></div>
+    <div class="gallery-dot active" data-dot="1"></div>
+    <div class="gallery-dot" data-dot="2"></div>
+    <div class="gallery-dot" data-dot="3"></div>
+  </div>
+</div>
 </section>
 
 <section class="budget-section reveal">
@@ -1199,6 +1258,63 @@ const obs=new IntersectionObserver((entries)=>{
   });
 },{threshold:[0,0.1,0.25,0.5,0.75,1]});
   obs.observe(section);
+})();
+// ══════════════════════════════
+// MOBILE FLIP SLIDER
+// ══════════════════════════════
+(function(){
+  if(window.innerWidth>600)return;
+  const track=document.getElementById('flipTrackMobile');
+  if(!track)return;
+  const cards=Array.from(track.querySelectorAll('.flip-card-m'));
+  const dots=Array.from(document.getElementById('flipDotsMobile').querySelectorAll('[data-dot]'));
+  const REAL=4;
+  const CARD_W=Math.min(window.innerWidth*0.72,280)+16;
+  let curIdx=2;
+  let dragStartX=0,dragDelta=0;
+
+  function getOffset(idx){
+    const wrapW=track.parentElement.offsetWidth;
+    return Math.round((wrapW-Math.min(window.innerWidth*0.72,280))/2)-idx*CARD_W;
+  }
+
+  function applyState(idx,anim=true){
+    track.style.transition=anim?'transform .5s cubic-bezier(.4,0,.2,1)':'none';
+    track.style.transform=`translateX(${getOffset(idx)}px)`;
+    cards.forEach((c,i)=>{
+      c.classList.remove('active','semi');
+      if(i===idx)c.classList.add('active');
+      else if(i===idx-1||i===idx+1)c.classList.add('semi');
+    });
+    const dotIdx=((idx-2)%REAL+REAL)%REAL;
+    dots.forEach((d,i)=>d.classList.toggle('active',i===dotIdx));
+  }
+
+  track.addEventListener('transitionend',()=>{
+    if(curIdx>=cards.length-2){curIdx=curIdx-REAL;applyState(curIdx,false);}
+    else if(curIdx<=1){curIdx=curIdx+REAL;applyState(curIdx,false);}
+  });
+
+  applyState(curIdx,false);
+
+  track.addEventListener('touchstart',e=>{
+    dragStartX=e.touches[0].clientX;dragDelta=0;
+    track.style.transition='none';
+  },{passive:true});
+  track.addEventListener('touchmove',e=>{
+    dragDelta=e.touches[0].clientX-dragStartX;
+    track.style.transform=`translateX(${getOffset(curIdx)+dragDelta}px)`;
+  },{passive:true});
+  track.addEventListener('touchend',()=>{
+    if(dragDelta<-50){curIdx++;}
+    else if(dragDelta>50){curIdx--;}
+    applyState(curIdx);
+    dragDelta=0;
+  });
+
+  dots.forEach((d,i)=>d.addEventListener('click',()=>{
+    curIdx=i+2;applyState(curIdx);
+  }));
 })();
 // PARALLAX
 const pBg = document.getElementById('parallaxBg');
