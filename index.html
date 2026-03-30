@@ -42,6 +42,7 @@ body::before {
     radial-gradient(ellipse at 60% 80%, rgba(60,80,110,0.10) 0%, transparent 50%),
     linear-gradient(135deg, #0a0a10 0%, #0e0e18 40%, #0c0c16 70%, #0a0a12 100%);
   animation: bgShimmer 12s ease-in-out infinite alternate;
+  will-change: filter;
 }
 
 @keyframes bgShimmer {
@@ -67,6 +68,7 @@ body::after {
   );
   background-size: 200% 200%;
   animation: silverSlide 8s ease-in-out infinite;
+  will-change: filter, background-position;
 }
 
 @keyframes silverSlide {
@@ -880,6 +882,7 @@ footer {
   .card-deck-wrap { display: none; }
   .flip-slider-mobile { display: block; }
   .flip-dots-m { display: flex; }
+  .gallery-arrows { display: none; }
 }
 </style>
 </head><body style="opacity:0;">
@@ -1382,6 +1385,7 @@ heroEl.addEventListener('touchend',e=>{
   const REAL=4;
   let curIdx=2;
   let dragStartX=0,dragDelta=0;
+  let isAnimating=false;
 
   function getCardW(){
     return cards[0]?cards[0].offsetWidth+16:Math.min(window.innerWidth*0.70,272)+16;
@@ -1396,16 +1400,28 @@ heroEl.addEventListener('touchend',e=>{
   function applyState(idx,anim=true){
     track.style.transition=anim?'transform .5s cubic-bezier(.4,0,.2,1)':'none';
     track.style.transform=`translateX(${getOffset(idx)}px)`;
-    if(anim) cards.forEach(c=>c.classList.remove('active'));
-    setTimeout(()=>{
+    if(!anim){
       cards.forEach((c,i)=>{
         c.classList.remove('active','semi');
-        if(i===idx){c.classList.add('active');}
-        else if(i===idx-1||i===idx+1){c.classList.add('semi');}
+        if(i===idx)c.classList.add('active');
+        else if(i===idx-1||i===idx+1)c.classList.add('semi');
       });
       const dotIdx=((idx-2)%REAL+REAL)%REAL;
       dots.forEach((d,i)=>d.classList.toggle('active',i===dotIdx));
-    },anim?280:0);
+      return;
+    }
+    isAnimating=true;
+    cards.forEach(c=>c.classList.remove('active','semi'));
+    setTimeout(()=>{
+      cards.forEach((c,i)=>{
+        c.classList.remove('active','semi');
+        if(i===idx)c.classList.add('active');
+        else if(i===idx-1||i===idx+1)c.classList.add('semi');
+      });
+      const dotIdx=((idx-2)%REAL+REAL)%REAL;
+      dots.forEach((d,i)=>d.classList.toggle('active',i===dotIdx));
+      isAnimating=false;
+    },300);
   }
 
   track.addEventListener('transitionend',()=>{
@@ -1416,17 +1432,20 @@ heroEl.addEventListener('touchend',e=>{
   requestAnimationFrame(()=>applyState(curIdx,false));
 
   track.addEventListener('touchstart',e=>{
+    if(isAnimating)return;
     dragStartX=e.touches[0].clientX;
     dragDelta=0;
     track.style.transition='none';
   },{passive:true});
 
   track.addEventListener('touchmove',e=>{
+    if(isAnimating)return;
     dragDelta=e.touches[0].clientX-dragStartX;
     track.style.transform=`translateX(${getOffset(curIdx)+dragDelta}px)`;
   },{passive:true});
 
   track.addEventListener('touchend',()=>{
+    if(isAnimating)return;
     if(dragDelta<-50)curIdx++;
     else if(dragDelta>50)curIdx--;
     applyState(curIdx);
@@ -1434,6 +1453,7 @@ heroEl.addEventListener('touchend',e=>{
   });
 
   dots.forEach((d,i)=>d.addEventListener('click',()=>{
+    if(isAnimating)return;
     curIdx=i+2;applyState(curIdx);
   }));
 })();
