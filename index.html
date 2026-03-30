@@ -505,7 +505,9 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
 .fashion-card{flex:0 0 220px;height:340px}
 .essentials-grid{grid-template-columns:1fr}
 .parallax-content h2{font-size:clamp(1.2rem,6vw,2rem)}
-.parallax-content p{font-size:.78rem;letter-spacing:.04em}}
+.parallax-content p{font-size:.78rem;letter-spacing:.04em}
+.card-deck-wrap{height:700px}
+.deck-card{width:75vw;height:42vw;max-width:280px;max-height:160px}}
 }
 
 /* SUNSCREEN */
@@ -1071,9 +1073,13 @@ heroEl.addEventListener('touchend',e=>{
   const section=document.getElementById('sunscreenSection');
   const cards=[0,1,2,3].map(i=>document.getElementById('deckCard'+i));
 
+  const isMobile=()=>window.innerWidth<=600;
   const spread=[
-    {x:-390,rot:-12},{x:-130,rot:-4},{x:130,rot:4},{x:390,rot:12}
-  ];
+  {x:-390,rot:-12},{x:-130,rot:-4},{x:130,rot:4},{x:390,rot:12}
+];
+const spreadMobile=[
+  {x:0,y:-240,rot:-2},{x:0,y:-80,rot:1},{x:0,y:80,rot:-1},{x:0,y:240,rot:2}
+];
   const stacked=[
     {x:-6,rot:-4},{x:-2,rot:-1},{x:2,rot:2},{x:6,rot:5}
   ];
@@ -1102,13 +1108,20 @@ heroEl.addEventListener('touchend',e=>{
   }
 
   function applySpread(animate){
-    cards.forEach((c,i)=>{
-      c.style.zIndex=i;
-      c.style.boxShadow='0 20px 60px rgba(0,0,0,.7)';
+  const mobile=isMobile();
+  cards.forEach((c,i)=>{
+    c.style.zIndex=i;
+    c.style.boxShadow='0 20px 60px rgba(0,0,0,.7)';
+    if(mobile){
+      c.style.transition=animate?'transform .6s cubic-bezier(.4,0,.2,1)':'none';
+      c.style.transform=`translateX(${spreadMobile[i].x}px) translateY(${spreadMobile[i].y}px) rotate(${spreadMobile[i].rot}deg)`;
+      basePos[i]={x:spreadMobile[i].x,y:spreadMobile[i].y,rot:spreadMobile[i].rot};
+    } else {
       setCardPos(c,spread[i].x,spread[i].rot,animate);
       basePos[i]={x:spread[i].x,rot:spread[i].rot};
-    });
-  }
+    }
+  });
+}
 
   function flipCard(card,toFront){
     if(toFront)card.classList.remove('flipped');
