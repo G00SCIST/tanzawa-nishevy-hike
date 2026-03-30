@@ -87,7 +87,6 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   opacity: 0.13;
 }
 
-/* HERO */
 .hero {
   position: relative;
   height: 100vh;
@@ -248,7 +247,6 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   margin: 0 auto 40px;
 }
 
-/* PARALLAX */
 .parallax-section {
   position: relative;
   height: 420px;
@@ -301,7 +299,6 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   text-transform: uppercase;
 }
 
-/* ROUTE */
 .route-section {
   padding: 100px 20px;
   max-width: 860px;
@@ -487,7 +484,6 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   line-height: 1.75;
 }
 
-/* SUNSCREEN */
 .sunscreen-section {
   padding: 100px 20px 60px;
   text-align: center;
@@ -522,7 +518,6 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   margin-bottom: 70px;
 }
 
-/* CARD DECK */
 .card-deck-wrap {
   position: relative;
   width: 100%;
@@ -609,7 +604,6 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   box-shadow: 0 40px 80px rgba(0,0,0,.85), 0 0 40px rgba(168,180,192,.15) !important;
 }
 
-/* MOBILE FLIP SLIDER */
 .flip-slider-mobile {
   display: none;
   width: 100%;
@@ -701,7 +695,6 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   margin-top: 20px;
 }
 
-/* BUDGET */
 .budget-section {
   padding: 80px 20px;
   max-width: 560px;
@@ -762,7 +755,6 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   font-weight: bold;
 }
 
-/* ESSENTIALS */
 .essentials-section {
   padding: 80px 20px 100px;
   max-width: 860px;
@@ -846,7 +838,6 @@ footer {
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
-/* MEDIA */
 @media (max-width: 600px) {
   .gallery-slide.left,
   .gallery-slide.right {
@@ -1391,7 +1382,7 @@ heroEl.addEventListener('touchend',e=>{
   const dots=dotsEl?Array.from(dotsEl.querySelectorAll('[data-dot]')):[];
   const REAL=4;
   const CLONE=2;
-  let curIdx=CLONE+2;
+  let curIdx=CLONE;
   let dragStartX=0,dragDelta=0;
   let isAnimating=false;
 
