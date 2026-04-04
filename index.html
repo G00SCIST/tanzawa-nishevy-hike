@@ -890,15 +890,49 @@ footer {
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
 @media (max-width: 600px) {
+  /* Lighten background animations on mobile — slower, less GPU work */
+  body::before {
+    animation: bgShimmer 20s ease-in-out infinite alternate;
+  }
+  body::after {
+    animation: silverSlide 14s ease-in-out infinite;
+  }
+  #deerCanvas { display: none; }
+
+  /* Simplify gallery slide transitions — keep smooth, drop expensive blur */
+  .gallery-slide {
+    transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.7s ease;
+  }
+  .gallery-slide.left, .gallery-slide.right,
+  .gallery-slide.hidden-left, .gallery-slide.hidden-right {
+    filter: brightness(0.3);
+  }
+  .gallery-slide.center {
+    filter: brightness(1);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+  }
   .gallery-slide.left,
   .gallery-slide.right {
     opacity: 0;
     pointer-events: none;
   }
   .gallery-slide.center {
-    width: 82vw;
-    height: 78vh;
+    width: 85vw;
+    height: min(70vh, 520px);
   }
+
+  /* More room for snake below photo */
+  .gallery-track {
+    top: 120px;
+    bottom: 60px;
+  }
+  .gallery-nav {
+    bottom: 10px;
+  }
+
+  /* Remove backdrop-filter on mobile */
+  .gallery-arrow { backdrop-filter: none; }
+
   .route-point {
     grid-template-columns: 20px 1fr;
     grid-template-rows: auto auto;
@@ -924,6 +958,12 @@ footer {
   .flip-slider-mobile { display: block; }
   .flip-dots-m { display: flex; }
   .gallery-arrows { display: none; }
+
+  /* Simplify parallax on mobile */
+  .parallax-bg { will-change: auto; }
+
+  /* Keep img zoom but use GPU-friendly transition */
+  .point-img img { transition: transform 0.8s ease; }
 }
 </style>
 </head>
@@ -1280,6 +1320,8 @@ const deers = Array.from({length:7},(_,i)=>({
   offset: Math.random()*100
 }));
 
+const isMobile = window.innerWidth <= 600;
+
 function animateDeers() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
   const t = performance.now()/1000;
@@ -1291,7 +1333,7 @@ function animateDeers() {
   });
   requestAnimationFrame(animateDeers);
 }
-animateDeers();
+if(!isMobile) animateDeers();
 
 // ══════════════════════════════
 // HERO GALLERY
@@ -1346,14 +1388,14 @@ document.getElementById('galleryNext').addEventListener('click',()=>setGallery(c
 document.getElementById('galleryPrev').addEventListener('click',()=>setGallery(cur-1));
 snakeClicks.forEach(r=>r.addEventListener('click',()=>setGallery(+r.dataset.index)));
 
-let heroTimer = setInterval(()=>setGallery(cur+1), 2000);
+let heroTimer = setInterval(()=>setGallery(cur+1), isMobile ? 3500 : 2000);
 const heroEl = document.querySelector('.hero');
 let hTX = 0;
 heroEl.addEventListener('touchstart',e=>{ hTX=e.touches[0].clientX; clearInterval(heroTimer); });
 heroEl.addEventListener('touchend',e=>{
   const diff = hTX-e.changedTouches[0].clientX;
   if(Math.abs(diff)>40) setGallery(diff>0?cur+1:cur-1);
-  heroTimer = setInterval(()=>setGallery(cur+1),2000);
+  heroTimer = setInterval(()=>setGallery(cur+1), isMobile ? 3500 : 2000);
 });
 
 // ══════════════════════════════
@@ -1561,14 +1603,20 @@ heroEl.addEventListener('touchend',e=>{
 // ══════════════════════════════
 // PARALLAX
 // ══════════════════════════════
+let scrollTicking = false;
 window.addEventListener('scroll',()=>{
-  const bg=document.getElementById('parallaxBg');
-  if(bg){
-    const rect=bg.closest('.parallax-section').getBoundingClientRect();
-    const offset=rect.top*0.3;
-    bg.style.transform=`translateY(${offset}px)`;
-  }
-});
+  if(scrollTicking) return;
+  scrollTicking = true;
+  requestAnimationFrame(()=>{
+    const bg=document.getElementById('parallaxBg');
+    if(bg){
+      const rect=bg.closest('.parallax-section').getBoundingClientRect();
+      const offset=rect.top*0.3;
+      bg.style.transform=`translateY(${offset}px)`;
+    }
+    scrollTicking = false;
+  });
+},{passive:true});
 
 // ══════════════════════════════
 // SCROLL REVEAL + IMG ZOOM
