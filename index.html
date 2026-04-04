@@ -128,9 +128,11 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-  position: relative;
+  position: absolute;
+  top: 152px;
+  left: 0;
+  right: 0;
+  bottom: 40px;
 }
 
 .gallery-slide {
@@ -190,13 +192,62 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
 
 .gallery-nav {
   position: absolute;
-  bottom: 36px;
+  bottom: 12px;
   left: 50%; transform: translateX(-50%);
-  display: flex; gap: 10px;
   z-index: 20;
 }
 
-.gallery-dot {
+.snake-nav { display: block; overflow: visible; }
+
+.snake-body {
+  fill: none;
+  stroke: none;
+}
+
+.snake-outline {
+  fill: none;
+  stroke: #1a1a22;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.snake-fill {
+  fill: none;
+  stroke: #8a8a95;
+  stroke-width: 7;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.snake-scales-line {
+  fill: none;
+  stroke: url(#snakeScaleP);
+  stroke-width: 7;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#snakeHead {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.snake-tongue {
+  stroke: #c44;
+  stroke-width: 0.9;
+  fill: none;
+  stroke-linecap: round;
+  animation: tongueFork 0.8s ease-in-out infinite;
+}
+
+@keyframes tongueFork {
+  0%, 100% { opacity: 0; }
+  25%, 65% { opacity: 1; }
+}
+
+.snake-click { cursor: pointer; fill: transparent; }
+
+#galleryNav .gallery-dot {
   width: 7px; height: 7px;
   border-radius: 50%;
   background: rgba(255,255,255,0.25);
@@ -204,7 +255,7 @@ section, footer, .parallax-section { position: relative; z-index: 2; }
   transition: all 0.3s;
 }
 
-.gallery-dot.active {
+#galleryNav .gallery-dot.active {
   background: var(--silver);
   transform: scale(1.5);
 }
@@ -898,10 +949,37 @@ footer {
     <button class="gallery-arrow" id="galleryNext">&#8594;</button>
   </div>
   <div class="gallery-nav" id="galleryNav">
-    <div class="gallery-dot active" data-index="0"></div>
-    <div class="gallery-dot" data-index="1"></div>
-    <div class="gallery-dot" data-index="2"></div>
-    <div class="gallery-dot" data-index="3"></div>
+    <svg class="snake-nav" viewBox="0 0 150 36" width="150" height="36">
+      <defs>
+        <pattern id="snakeScaleP" width="5" height="5" patternUnits="userSpaceOnUse">
+          <path d="M 0,2.5 Q 2.5,0 5,2.5 Q 2.5,5 0,2.5 Z" fill="none" stroke="rgba(30,30,30,0.4)" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      <path id="snakePath" class="snake-body"
+            d="M 5,18 Q 22,5 39,18 Q 56,31 73,18 Q 90,5 107,18 Q 124,31 141,18"/>
+      <path class="snake-outline"
+            d="M 5,18 Q 22,5 39,18 Q 56,31 73,18 Q 90,5 107,18 Q 124,31 141,18"/>
+      <path class="snake-fill"
+            d="M 5,18 Q 22,5 39,18 Q 56,31 73,18 Q 90,5 107,18 Q 124,31 141,18"/>
+      <path class="snake-scales-line"
+            d="M 5,18 Q 22,5 39,18 Q 56,31 73,18 Q 90,5 107,18 Q 124,31 141,18"/>
+      <g id="snakeHead">
+        <path d="M -8,0 C -9,-6 2,-8 11,0 C 2,8 -9,6 -8,0 Z" fill="#8a8a95" stroke="#1a1a22" stroke-width="1.5"/>
+        <path d="M -2,0 L 3,-3.5 L 7,0 L 3,3.5 Z" fill="none" stroke="rgba(30,30,30,0.3)" stroke-width="0.5"/>
+        <path d="M -5,0 L -1,-2 L 2,0 L -1,2 Z" fill="none" stroke="rgba(30,30,30,0.25)" stroke-width="0.4"/>
+        <circle cx="4" cy="-3.8" r="1.5" fill="#1a1a1a"/>
+        <circle cx="4" cy="3.8" r="1.5" fill="#1a1a1a"/>
+        <circle cx="4.5" cy="-3.5" r="0.5" fill="#555"/>
+        <circle cx="4.5" cy="3.5" r="0.5" fill="#555"/>
+        <circle cx="8.5" cy="-1.2" r="0.35" fill="rgba(0,0,0,0.3)"/>
+        <circle cx="8.5" cy="1.2" r="0.35" fill="rgba(0,0,0,0.3)"/>
+        <path class="snake-tongue" d="M 11,0 l 5,-3 M 11,0 l 5,3"/>
+      </g>
+      <rect class="snake-click" x="0" y="0" width="37.5" height="36" data-index="0"/>
+      <rect class="snake-click" x="37.5" y="0" width="37.5" height="36" data-index="1"/>
+      <rect class="snake-click" x="75" y="0" width="37.5" height="36" data-index="2"/>
+      <rect class="snake-click" x="112.5" y="0" width="37.5" height="36" data-index="3"/>
+    </svg>
   </div>
 </section>
 
@@ -918,11 +996,10 @@ footer {
   <h2 class="reveal">Маршрут</h2>
   <div class="section-divider reveal"></div>
   <div class="departure-block reveal">
-    <div class="dep-row"><span class="dep-time">06:00</span><span class="dep-text">Подъём. Лёгкий завтрак — потом будет не до него.</span></div>
-    <div class="dep-row"><span class="dep-time">06:45</span><span class="dep-text">Поезд со <strong>Синдзюку</strong> — Odakyu Line экспресс до Хадано (~1 ч 15 мин, ¥820)</span></div>
-    <div class="dep-row"><span class="dep-time">08:00</span><span class="dep-text">Станция <strong>Хадано</strong>. Сразу к автобусной остановке — очередь собирается быстро.</span></div>
-    <div class="dep-row"><span class="dep-time">08:25</span><span class="dep-text">Автобус 秦21 → <strong>Яби-цу-тоге</strong> (~48 мин, ¥570)</span></div>
-    <div class="dep-row"><span class="dep-time">09:15</span><span class="dep-text"><strong>Яби-цу-тоге, 761 м</strong><span class="start-badge">Старт</span></span></div>
+    <div class="dep-row"><span class="dep-time" style="color:#c0392b; font-weight:bold;">07:00</span><span class="dep-text">Встреча на <strong>Синдзюку</strong></span></div>
+    <div class="dep-row"><span class="dep-time">08:45</span><span class="dep-text">Станция <strong>Хадано</strong>. Сразу к автобусной остановке — очередь собирается быстро.</span></div>
+    <div class="dep-row"><span class="dep-time">08:55</span><span class="dep-text">Автобус 秦21 → <strong>Яби-цу-тоге</strong>: рейсы в 08:25 и 09:10. Успейте — других уже не будет.</span></div>
+    <div class="dep-row"><span class="dep-time">10:00</span><span class="dep-text"><strong>Яби-цу-тоге, 761 м</strong><span class="start-badge">Старт</span></span></div>
   </div>
   <div class="stats-bar reveal">
     <div class="stat-item"><span class="stat-val">15</span><span class="stat-label">километров</span></div>
@@ -935,7 +1012,7 @@ footer {
       <div class="point-img"><img src="yabitsu.png" alt="Яби-цу-тоге"></div>
       <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
       <div class="point-info">
-        <div class="point-time">09:15 — Старт</div>
+        <div class="point-time">10:00 — Старт</div>
         <div class="point-name">Яби-цу-тоге</div>
         <div class="point-alt">761 м</div>
         <div class="point-desc">Перевал с туалетами и вендингом. Набери воды у источника Гомаяшики — один из 100 знаменитых в Японии. Через 20 минут тропа уходит в лес.</div>
@@ -945,7 +1022,7 @@ footer {
       <div class="point-img"><img src="ninoto.png" alt="Ниното"></div>
       <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
       <div class="point-info">
-        <div class="point-time">10:20</div>
+        <div class="point-time">11:05</div>
         <div class="point-name">Ниното — 二ノ塔</div>
         <div class="point-alt">1 144 м</div>
         <div class="point-desc">Первый пик хребта. Фудзи появляется впервые — именно в этот момент понимаешь, зачем сюда ехал. Лавочки, можно снять лишний слой.</div>
@@ -955,7 +1032,7 @@ footer {
       <div class="point-img"><img src="sannoto.png" alt="Санното"></div>
       <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
       <div class="point-info">
-        <div class="point-time">10:35</div>
+        <div class="point-time">11:20</div>
         <div class="point-name">Санното — 三ノ塔</div>
         <div class="point-alt">1 205 м</div>
         <div class="point-desc">Лучшая панорама на всём маршруте. Фудзи, залив Сагами, острова Идзу и в ясную погоду — Токийское Скайтри. Стой здесь столько, сколько хочешь.</div>
@@ -965,7 +1042,7 @@ footer {
       <div class="point-img"><img src="karasuo.png" alt="Карасуо"></div>
       <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
       <div class="point-info">
-        <div class="point-time">11:05</div>
+        <div class="point-time">11:50</div>
         <div class="point-name">Карасуо — 烏尾山</div>
         <div class="point-alt">1 136 м</div>
         <div class="point-desc">Хижина с треугольной крышей — главный ориентир. Первый участок с цепями: держишься руками и спускаешься по скале. Звучит страшно, на деле — весело.</div>
@@ -975,7 +1052,7 @@ footer {
       <div class="point-img"><img src="gyoja.png" alt="Гёдза"></div>
       <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
       <div class="point-info">
-        <div class="point-time">11:30</div>
+        <div class="point-time">12:15</div>
         <div class="point-name">Гёдза — 行者ヶ岳</div>
         <div class="point-alt">1 180 м</div>
         <div class="point-desc">Второй и последний технический участок — снова цепи и скальные ступени. Самое живое место на маршруте. После него тропа успокаивается.</div>
@@ -985,7 +1062,7 @@ footer {
       <div class="point-img"><img src="shindainichi.png" alt="Шиндайнити"></div>
       <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
       <div class="point-info">
-        <div class="point-time">12:20</div>
+        <div class="point-time">13:05</div>
         <div class="point-name">Шиндайнити — 新大日</div>
         <div class="point-alt">1 340 м</div>
         <div class="point-desc">Развилка троп и последняя остановка перед вершиной. Буковый лес здесь осенью горит золотом. Вершина уже чувствуется близко.</div>
@@ -995,7 +1072,7 @@ footer {
       <div class="point-img"><img src="tonodake.png" alt="Тонодаке"></div>
       <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
       <div class="point-info">
-        <div class="point-time">13:15 — Вершина 🏔</div>
+        <div class="point-time">14:00 — Вершина 🏔</div>
         <div class="point-name">Тонодаке — 塔ノ岳</div>
         <div class="point-alt">1 491 м</div>
         <div class="point-desc">Вот и всё. Открытая вершина, хижина Уносуми и Фудзи прямо перед тобой. Обед здесь обязательно. Отдыхаем 30–40 минут — потом вниз.</div>
@@ -1005,7 +1082,7 @@ footer {
       <div class="point-img"><img src="okura_ridge.png" alt="Спуск"></div>
       <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
       <div class="point-info">
-        <div class="point-time">14:00 — 15:30</div>
+        <div class="point-time">14:45 — 16:15</div>
         <div class="point-name">Спуск: Окура-оне</div>
         <div class="point-alt">1 491 → 290 м</div>
         <div class="point-desc">7 км деревянных ступеней вниз. Японцы зовут этот хребет «Бака-оне» — Хребет дурака. По пути несколько чайных домиков: кофе ¥300, виды на залив.</div>
@@ -1015,7 +1092,7 @@ footer {
       <div class="point-img"><img src="yamacafe.png" alt="Yama Cafe"></div>
       <div class="point-line"><div class="point-dot"></div><div class="point-line-bar"></div></div>
       <div class="point-info">
-        <div class="point-time">15:30 — Финиш 🎌</div>
+        <div class="point-time">16:15 — Финиш 🎌</div>
         <div class="point-name">Yama Cafe</div>
         <div class="point-alt">290 м · Окура</div>
         <div class="point-desc">Финиш. Мороженое, кофе и ощущение, что прошёл что-то настоящее. Автобус до Сибусавы каждые 30 минут.</div>
@@ -1220,9 +1297,33 @@ animateDeers();
 // HERO GALLERY
 // ══════════════════════════════
 const slides = document.querySelectorAll('.gallery-slide');
-const heroDots = document.querySelectorAll('#galleryNav .gallery-dot');
 let cur = 0;
 const tot = slides.length;
+
+// Snake navigation
+const snakePath = document.getElementById('snakePath');
+const snakeHead = document.getElementById('snakeHead');
+const snakeClicks = document.querySelectorAll('.snake-click');
+const snakeLayers = document.querySelectorAll('.snake-outline, .snake-fill, .snake-scales-line');
+
+const pathLen = snakePath.getTotalLength();
+snakeLayers.forEach(l => l.style.strokeDasharray = pathLen);
+
+// Pre-calculate positions at each hump peak (12.5%, 37.5%, 62.5%, 87.5%)
+const snakePositions = [0.125, 0.375, 0.625, 0.875].map(pct => {
+  const d = pct * pathLen;
+  const pt = snakePath.getPointAtLength(d);
+  const pt2 = snakePath.getPointAtLength(Math.min(d + 1, pathLen));
+  const angle = Math.atan2(pt2.y - pt.y, pt2.x - pt.x) * 180 / Math.PI;
+  return { x: pt.x, y: pt.y, angle, dist: d };
+});
+
+function moveSnake(index) {
+  const pos = snakePositions[index];
+  snakeHead.style.transform = `translate(${pos.x}px, ${pos.y}px) rotate(${pos.angle}deg)`;
+  const offset = pathLen - pos.dist;
+  snakeLayers.forEach(l => l.style.strokeDashoffset = offset);
+}
 
 function setGallery(index) {
   cur = ((index%tot)+tot)%tot;
@@ -1237,13 +1338,13 @@ function setGallery(index) {
     else if(i===prev2) s.classList.add('hidden-left');
     else s.classList.add('hidden-right');
   });
-  heroDots.forEach((d,i)=>d.classList.toggle('active',i===cur));
+  moveSnake(cur);
 }
 
 setGallery(0);
 document.getElementById('galleryNext').addEventListener('click',()=>setGallery(cur+1));
 document.getElementById('galleryPrev').addEventListener('click',()=>setGallery(cur-1));
-heroDots.forEach(d=>d.addEventListener('click',()=>setGallery(+d.dataset.index)));
+snakeClicks.forEach(r=>r.addEventListener('click',()=>setGallery(+r.dataset.index)));
 
 let heroTimer = setInterval(()=>setGallery(cur+1), 2000);
 const heroEl = document.querySelector('.hero');
